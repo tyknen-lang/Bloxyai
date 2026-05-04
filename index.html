@@ -1546,7 +1546,7 @@ async function doGen(){
   }
   const prompt=document.getElementById('ptxt').value.trim();
   if(!prompt){toast('Please describe what you want to build first.');return;}
-  if(!APIKEY||APIKEY==='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'){
+  if(!APIKEY||APIKEY==='YOUR_API_KEY_HERE'){
     toast('API key not set — add your key to the HTML file first.');return;
   }
   const btn=document.getElementById('gbtn');btn.classList.add('ld');btn.disabled=true;
