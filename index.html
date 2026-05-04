@@ -1559,7 +1559,7 @@ async function doGen(){
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,
+      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,
         system:'You are BloxyAI, a Roblox Lua code generator. Your ONLY output is raw Lua code — nothing else. NEVER use markdown, NEVER use backticks, NEVER write python, NEVER explain anything, NEVER include preamble or postamble. Output ONLY valid Luau code that works in Roblox Studio. Start your response with -- or local or game: — never with a word, sentence, or backtick. Use game:GetService() for all services. If the request is unclear, still output working Lua code for the closest matching Roblox feature.',
         messages:[{role:'user',content:prompt}]})
     });
