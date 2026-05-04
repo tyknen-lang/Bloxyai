@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BloxyAI — AI Roblox Game Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+:root{
+  --bg:#07070f;--bg2:#0b0b18;--card:#0f0f1e;--card2:#131328;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);
+  --cyan:#00e8c8;--cdim:rgba(0,232,200,0.1);
+  --pink:#f040a0;--pdim:rgba(240,64,160,0.1);
+  --blue:#3b6ef0;--bdim:rgba(59,110,240,0.1);
+  --text:#ddddf0;--text2:#8888aa;--text3:#52527a;
+  --grad:linear-gradient(120deg,#00e8c8,#3b6ef0,#f040a0);
+  --shadow:0 24px 64px rgba(0,0,0,0.6);
+  --r:12px;--r2:18px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--cyan);border-radius:2px}
+.page{display:none}.page.active{display:block}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;height:68px;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  padding:0 clamp(1.25rem,5vw,4rem);
+  background:rgba(7,7,15,0.9);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);gap:1rem;
+}
+.nav-logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.4rem;background:linear-gradient(90deg,#00e8c8,#3b6ef0,#f040a0,#00e8c8);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;cursor:pointer;white-space:nowrap;justify-self:start;animation:logoShift 4s linear infinite}
+@keyframes logoShift{0%{background-position:0% center}100%{background-position:200% center}}
+.nav-center{display:flex;align-items:center;gap:2px;justify-self:center}
+.nav-center a{color:var(--text2);text-decoration:none;font-size:0.88rem;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.2s;white-space:nowrap;letter-spacing:0.01em}
+.nav-center a:hover{color:var(--text);background:rgba(255,255,255,0.05)}
+.nav-center a.active-nav{color:var(--cyan)}
+.nav-right{display:flex;align-items:center;gap:0.75rem;justify-self:end;flex-shrink:0}
+.nav-right a{color:var(--text2);text-decoration:none;font-size:0.86rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:color 0.2s}
+.nav-right a:hover{color:var(--cyan)}
+.discord-btn{display:flex;align-items:center;gap:7px;background:rgba(88,101,242,0.15);border:1px solid rgba(88,101,242,0.4);color:#7289da !important;padding:7px 14px;border-radius:8px;font-size:0.82rem;font-weight:700 !important;text-decoration:none;transition:all 0.2s;white-space:nowrap}
+.discord-btn:hover{background:rgba(88,101,242,0.3) !important;border-color:rgba(88,101,242,0.7);color:#fff !important;transform:translateY(-1px);box-shadow:0 4px 16px rgba(88,101,242,0.3)}
+.nav-avatar{width:34px;height:34px;border-radius:50%;background:var(--card2) !important;border:1.5px solid var(--cyan);display:grid;place-items:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:0.95rem;color:var(--cyan) !important;-webkit-text-fill-color:var(--cyan) !important;cursor:pointer;flex-shrink:0;transition:all 0.2s;box-shadow:0 0 10px rgba(0,232,200,0.25)}
+.nav-avatar:hover{box-shadow:0 0 18px rgba(0,232,200,0.5)}
+.nav-cta{background:var(--cyan);color:#000 !important;padding:9px 22px;border-radius:10px;font-weight:700 !important;font-size:0.86rem !important;transition:all 0.2s !important;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 0 24px rgba(0,232,200,0.2);white-space:nowrap}
+.nav-cta:hover{box-shadow:0 0 40px rgba(0,232,200,0.45) !important;transform:translateY(-1px)}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hbg span{display:block;width:22px;height:2px;background:var(--text2);border-radius:2px}
+.mob-nav{display:none;position:fixed;top:68px;left:0;right:0;z-index:199;background:var(--bg2);border-bottom:1px solid var(--border);padding:1.25rem clamp(1.25rem,5vw,4rem);flex-direction:column;gap:0.4rem}
+.mob-nav.open{display:flex}
+.mob-nav a{color:var(--text2);text-decoration:none;font-size:0.95rem;font-weight:600;padding:10px 0;cursor:pointer;border-bottom:1px solid var(--border);transition:color 0.2s}
+.mob-nav a:last-child{border-bottom:none}
+.mob-nav a:hover{color:var(--cyan)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;place-items:center;padding:120px clamp(1.25rem,5vw,4rem) 0;position:relative;overflow:hidden;text-align:center}
+.h-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(0,232,200,0.1) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 12% 70%,rgba(59,110,240,0.07) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 88% 65%,rgba(240,64,160,0.07) 0%,transparent 55%)}
+.h-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 100%)}
+.hero-in{position:relative;z-index:1;max-width:860px;width:100%}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,232,200,0.07);border:1px solid rgba(0,232,200,0.2);padding:7px 18px;border-radius:100px;font-size:0.74rem;font-weight:700;color:var(--cyan);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.75rem;animation:fadeup 0.6s both}
+.bdot{width:6px;height:6px;background:var(--cyan);border-radius:50%;flex-shrink:0;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.6)}}
+@keyframes fadeup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+h1{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(2.6rem,8vw,5.5rem);font-weight:800;line-height:1.06;letter-spacing:-0.025em;margin-bottom:1.4rem;animation:fadeup 0.6s 0.08s both}
+.gt{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-p{font-size:clamp(1rem,2.5vw,1.15rem);color:var(--text2);line-height:1.8;max-width:560px;margin:0 auto 2.5rem;animation:fadeup 0.6s 0.16s both;font-weight:400}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeup 0.6s 0.24s both}
+.btn{padding:14px 32px;border-radius:12px;font-weight:700;font-size:0.95rem;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.22s}
+.btn.p{background:var(--cyan);color:#000;box-shadow:0 0 28px rgba(0,232,200,0.3)}
+.btn.p:hover{box-shadow:0 0 50px rgba(0,232,200,0.55);transform:translateY(-2px)}
+.btn.s{background:rgba(255,255,255,0.04);color:var(--text);border:1px solid var(--border2)}
+.btn.s:hover{border-color:rgba(0,232,200,0.4);color:var(--cyan)}
+.stats{display:flex;justify-content:center;gap:clamp(2rem,5vw,4.5rem);flex-wrap:wrap;margin-top:4rem;animation:fadeup 0.6s 0.32s both}
+.stat{text-align:center}
+.stat-n{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.stat-l{font-size:0.76rem;color:var(--text3);margin-top:5px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase}
+.cwin{margin:3.5rem auto 0;max-width:680px;background:var(--card);border:1px solid var(--border2);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow),0 0 0 1px rgba(0,232,200,0.04);text-align:left;animation:fadeup 0.6s 0.4s both}
+.cwin-bar{background:var(--card2);padding:12px 16px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border)}
+.wdot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.dr{background:#ff5f56}.dy{background:#ffbd2e}.dg{background:#27c93f}
+.cwin-title{margin-left:10px;font-size:0.75rem;color:var(--text3);font-family:monospace}
+.cwin-body{padding:18px 20px}
+.cprompt{display:flex;align-items:flex-start;gap:10px;background:rgba(0,232,200,0.06);border:1px solid rgba(0,232,200,0.14);padding:11px 15px;border-radius:10px;margin-bottom:14px;font-size:0.86rem;color:var(--text)}
+.carr{color:var(--cyan);margin-top:1px;font-weight:700}
+pre.cblock{background:rgba(0,0,0,0.38);border-radius:10px;padding:16px;font-family:'Courier New',monospace;font-size:0.76rem;line-height:1.75;overflow-x:auto;white-space:pre;color:#cdd6f4}
+.kw{color:#cba6f7}.fn{color:#a6e3a1}.str{color:#f9e2af}.cm{color:#585b70}.vr{color:#89dceb}
+
+/* ── SECTIONS ── */
+.sec{padding:clamp(4rem,8vw,7rem) clamp(1.25rem,5vw,4rem)}
+.sec.alt{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stag{font-size:0.7rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:0.75rem}
+.sh{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(1.9rem,4.5vw,3rem);font-weight:800;line-height:1.15;letter-spacing:-0.02em;margin-bottom:0.9rem}
+.ss{color:var(--text2);max-width:540px;font-size:1rem;line-height:1.8;font-weight:400}
+.c{text-align:center}.c .ss{margin:0 auto}
+
+/* SVG ICONS */
+.ico{display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── STEPS ── */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.25rem;margin-top:3rem}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:2rem 1.75rem;transition:all 0.25s}
+.sc:hover{border-color:rgba(0,232,200,0.22);transform:translateY(-3px)}
+.snum{font-family:'Bricolage Grotesque',sans-serif;font-size:2.8rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:1rem}
+.sc h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.45rem}
+.sc p{color:var(--text2);font-size:0.86rem;line-height:1.75;font-weight:400}
+
+/* ── FEATURES ── */
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3rem}
+.fcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:1.75rem;position:relative;overflow:hidden;transition:all 0.25s}
+.fcard::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:0;transition:opacity 0.25s}
+.fcard:hover{border-color:rgba(0,232,200,0.18);transform:translateY(-3px)}
+.fcard:hover::after{opacity:1}
+.ficon{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;margin-bottom:1.1rem}
+.fcard h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.4rem}
+.fcard p{color:var(--text2);font-size:0.85rem;line-height:1.75;font-weight:400}
+
+/* ── CAROUSEL ── */
+.carousel-sec{padding:clamp(4rem,8vw,7rem) 0;overflow:hidden}
+.carousel-head{text-align:center;padding:0 clamp(1.25rem,5vw,4rem);margin-bottom:3rem}
+.carousel-track-wrap{position:relative}
+.carousel-track-wrap::before,.carousel-track-wrap::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.carousel-track-wrap::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
+.carousel-track-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
+.carousel-track{display:flex;gap:1.25rem;animation:scroll 40s linear infinite;width:max-content}
+.carousel-track:hover{animation-play-state:paused}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.rcard{background:var(--card2);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem;width:300px;flex-shrink:0;transition:border-color 0.2s}
+.rcard:hover{border-color:rgba(0,232,200,0.2)}
+.rcard-top{display:flex;align-items:center;gap:12px;margin-bottom:1rem}
+.rcard-avatar{flex-shrink:0;border-radius:8px;overflow:hidden;line-height:0}
+.rcard-userinfo{}
+.rname{font-size:0.9rem;font-weight:700;font-family:'Bricolage Grotesque',sans-serif;color:var(--text)}
+.rsub{font-size:0.74rem;color:var(--text3);margin-top:2px;font-weight:500}
+.rcard p{color:var(--text2);font-size:0.86rem;line-height:1.75;font-weight:400}
+
+/* ── PRICING ── */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:1.5rem;margin-top:3rem;align-items:start;max-width:980px;margin-left:auto;margin-right:auto}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:2rem 1.75rem;position:relative;transition:all 0.25s}
+.pcard.hot{background:linear-gradient(160deg,rgba(0,232,200,0.06),rgba(59,110,240,0.06));border-color:rgba(0,232,200,0.35);box-shadow:0 0 48px rgba(0,232,200,0.07)}
+.htag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--grad);color:#000;font-size:0.66rem;font-weight:800;padding:4px 16px;border-radius:100px;text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif}
+.pname{font-family:'Bricolage Grotesque',sans-serif;font-size:1.2rem;font-weight:800}
+.pdesc{color:var(--text3);font-size:0.8rem;margin-top:3px;margin-bottom:1.4rem;font-weight:500}
+.pprice{font-family:'Bricolage Grotesque',sans-serif;font-size:3rem;font-weight:800;line-height:1;letter-spacing:-0.02em}
+.pcard.hot .pprice{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.pprice sub{font-size:1rem;color:var(--text3);font-weight:400;vertical-align:baseline;font-family:'Plus Jakarta Sans',sans-serif}
+.pdiv{height:1px;background:var(--border);margin:1.4rem 0}
+.pfeats{list-style:none;display:flex;flex-direction:column;gap:0.65rem}
+.pfeats li{display:flex;align-items:center;gap:10px;font-size:0.86rem;font-weight:500}
+.ck{color:var(--cyan);font-size:0.8rem;font-weight:700;flex-shrink:0}
+.pfeats li.no{color:var(--text3)}.pfeats li.no .ck{color:var(--text3)}
+.pbtn{width:100%;margin-top:1.75rem;padding:13px;border-radius:11px;font-weight:700;font-size:0.9rem;border:none;cursor:pointer;transition:all 0.22s;font-family:'Plus Jakarta Sans',sans-serif}
+.pbtn.cy{background:var(--cyan);color:#000;box-shadow:0 0 20px rgba(0,232,200,0.2)}
+.pbtn.cy:hover{box-shadow:0 0 40px rgba(0,232,200,0.45);transform:translateY(-2px)}
+.pbtn.gh{background:rgba(255,255,255,0.04);color:var(--text);border:1px solid var(--border2)}
+.pbtn.gh:hover{border-color:rgba(0,232,200,0.35);color:var(--cyan)}
+
+/* ── FAQ ── */
+.fw{max-width:700px;margin:3rem auto 0;display:flex;flex-direction:column;gap:0.8rem}
+.fi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.fq{padding:1.1rem 1.5rem;font-weight:600;font-size:0.92rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:1rem;transition:color 0.2s}
+.fq:hover{color:var(--cyan)}.fq span:first-child{flex:1}
+.fico{color:var(--text3);font-size:1.3rem;line-height:1;flex-shrink:0;transition:transform 0.3s}
+.fi.open .fico{transform:rotate(45deg);color:var(--cyan)}
+.fa{max-height:0;overflow:hidden;transition:max-height 0.35s ease}
+.fi.open .fa{max-height:220px}
+.fa p{padding:0 1.5rem 1.2rem;color:var(--text2);font-size:0.86rem;line-height:1.8;font-weight:400}
+
+/* ── CTA ── */
+.cta{text-align:center;padding:clamp(4rem,8vw,7rem) clamp(1.25rem,5vw,4rem);background:radial-gradient(ellipse 70% 70% at 50% 50%,rgba(0,232,200,0.07) 0%,transparent 65%);border-top:1px solid var(--border)}
+.cta h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:1rem}
+.cta p{color:var(--text2);max-width:440px;margin:0 auto 2.5rem;font-size:1rem;line-height:1.8;font-weight:400}
+
+/* ── FOOTER ── */
+footer{padding:2.5rem clamp(1.25rem,5vw,4rem);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.flogo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.2rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+footer p{font-size:0.8rem;color:var(--text3);font-weight:500}
+.flinks{display:flex;gap:1.5rem;flex-wrap:wrap}
+.flinks a{font-size:0.8rem;color:var(--text3);text-decoration:none;cursor:pointer;transition:color 0.2s;font-weight:500}
+.flinks a:hover{color:var(--cyan)}
+
+/* ── MODALS ── */
+.ovl{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.78);backdrop-filter:blur(10px);place-items:center;padding:1rem}
+.ovl.on{display:grid}
+.modal{background:var(--card2);border:1px solid var(--border2);border-radius:var(--r2);padding:2.5rem 2.25rem;width:100%;max-width:420px;position:relative;animation:fadeup 0.3s both}
+.mcl{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer;padding:4px;line-height:1;transition:color 0.2s}
+.mcl:hover{color:var(--text)}
+.mlogo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.15rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:3px}
+.modal h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:3px}
+.msub{color:var(--text2);font-size:0.86rem;margin-bottom:1.75rem;font-weight:400}
+.fg{margin-bottom:0.9rem}
+.fg label{display:block;font-size:0.8rem;font-weight:700;color:var(--text2);margin-bottom:5px;letter-spacing:0.02em;text-transform:uppercase}
+.pw-wrap{position:relative}
+.fg input{width:100%;padding:12px 42px 12px 14px;background:var(--bg);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:0.9rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color 0.2s}
+.fg input[type="text"],.fg input[type="email"]{padding:12px 14px}
+.fg input:focus{border-color:var(--cyan)}
+.eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);padding:4px;line-height:1;transition:color 0.2s;display:flex;align-items:center;justify-content:center}
+.eye-btn:hover{color:var(--cyan)}
+.mbtn{width:100%;padding:13px;background:var(--cyan);color:#000;border:none;border-radius:11px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 0.2s;margin-top:0.4rem;font-family:'Plus Jakarta Sans',sans-serif}
+.mbtn:hover{opacity:0.9}
+.msw{text-align:center;margin-top:1rem;font-size:0.83rem;color:var(--text3)}
+.msw a{color:var(--cyan);cursor:pointer;font-weight:700;text-decoration:none}
+.merr{background:rgba(240,64,160,0.1);border:1px solid rgba(240,64,160,0.25);border-radius:9px;padding:10px 14px;font-size:0.82rem;color:var(--pink);margin-bottom:1rem;display:none;font-weight:500}
+.merr.on{display:block}
+
+/* ── DASHBOARD ── */
+#page-dash{min-height:100vh;padding-top:68px}
+.dw{display:flex;min-height:calc(100vh - 68px)}
+.dsb{width:235px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:68px;height:calc(100vh - 68px);overflow:hidden;transition:width 0.3s,transform 0.3s}
+.dsb.collapsed{width:0;overflow:hidden;border-right:none}
+.dsb-inner{width:235px;display:flex;flex-direction:column;height:100%;flex-shrink:0;overflow-y:auto}
+.collapse-btn{position:fixed;top:50%;transform:translateY(-50%);left:235px;z-index:90;width:20px;height:56px;background:var(--cyan);border:none;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:left 0.3s,background 0.2s,width 0.2s;color:#000;box-shadow:3px 0 12px rgba(0,232,200,0.25)}
+.collapse-btn:hover{background:#00ffdf;width:24px}
+.collapse-btn svg{transition:transform 0.3s;flex-shrink:0}
+.dsb.collapsed~.collapse-btn,.dsb.collapsed+.collapse-btn{left:0}
+.dsb.collapsed~* .collapse-btn{left:0}
+.dsb-top{padding:1.4rem 0.9rem;flex:1}
+.dlbl{font-size:0.64rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);padding:0 0.5rem;margin-bottom:0.5rem;margin-top:1.2rem}
+.dlbl:first-child{margin-top:0}
+.ditem{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;cursor:pointer;color:var(--text2);font-size:0.87rem;font-weight:600;transition:all 0.2s;margin-bottom:2px;user-select:none}
+.ditem:hover{background:var(--card2);color:var(--text)}
+.ditem.on{background:var(--cdim);color:var(--cyan)}
+.dico{width:20px;display:grid;place-items:center;flex-shrink:0}
+.dsb-bot{padding:1rem 0.9rem;border-top:1px solid var(--border)}
+.tcard{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:1rem}
+.thead2{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem}
+.tlbl{font-size:0.68rem;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:0.1em}
+.tnum{font-family:'Bricolage Grotesque',sans-serif;font-size:0.88rem;font-weight:700}
+.tbar{height:3px;background:var(--border2);border-radius:2px;overflow:hidden;margin-bottom:0.75rem}
+.tfill{height:100%;background:var(--grad);border-radius:2px;transition:width 0.5s}
+.ubtn{width:100%;padding:9px;background:var(--cyan);color:#000;border:none;border-radius:8px;font-weight:700;font-size:0.76rem;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s}
+.ubtn:hover{opacity:0.85}
+.dm{flex:1;padding:2rem clamp(1.25rem,3vw,2.5rem);overflow-x:hidden;min-width:0}
+.dmh{margin-bottom:1.75rem}
+.dmh h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.6rem;font-weight:800}
+.dmh p{color:var(--text2);font-size:0.86rem;margin-top:4px;font-weight:400}
+.gcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:1.25rem}
+.gtop{padding:1.4rem 1.5rem;border-bottom:1px solid var(--border)}
+.pills{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.pill{padding:6px 14px;border-radius:100px;font-size:0.74rem;font-weight:700;cursor:pointer;border:1px solid var(--border2);color:var(--text2);transition:all 0.2s;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;letter-spacing:0.02em}
+.pill:hover{border-color:rgba(0,232,200,0.4);color:var(--cyan)}
+.pill.on{background:var(--cdim);border-color:rgba(0,232,200,0.35);color:var(--cyan)}
+.ptxt{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:11px;padding:13px 15px;color:var(--text);font-size:0.9rem;font-family:'Plus Jakarta Sans',sans-serif;resize:none;outline:none;transition:border-color 0.2s;line-height:1.7;font-weight:400}
+.ptxt:focus{border-color:var(--cyan)}
+.ptxt::placeholder{color:var(--text3)}
+.gbot{padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.ccnt{font-size:0.77rem;color:var(--text3);font-weight:500}
+.gbtn2{display:flex;align-items:center;gap:8px;background:var(--cyan);color:#000;padding:12px 28px;border-radius:10px;font-weight:700;font-size:0.88rem;border:none;cursor:pointer;transition:all 0.22s;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 0 20px rgba(0,232,200,0.2);flex-shrink:0}
+.gbtn2:hover{box-shadow:0 0 36px rgba(0,232,200,0.45);transform:translateY(-1px)}
+.gbtn2:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+.spin{width:15px;height:15px;border:2px solid rgba(0,0,0,0.25);border-top-color:#000;border-radius:50%;animation:rot 0.6s linear infinite;display:none;flex-shrink:0}
+.gbtn2.ld .spin{display:block}.gbtn2.ld .bt{display:none}
+@keyframes rot{to{transform:rotate(360deg)}}
+/* ── GENERATING STATE ── */
+/* ── SHOWCASE ── */
+.showcase-wrap{margin-top:3rem}
+.showcase-tabs{display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:2rem}
+.stab{display:flex;align-items:center;gap:7px;padding:9px 18px;border-radius:100px;font-size:0.82rem;font-weight:700;cursor:pointer;border:1px solid var(--border2);color:var(--text2);background:transparent;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.22s;white-space:nowrap;letter-spacing:0.02em}
+.stab:hover{border-color:rgba(0,232,200,0.4);color:var(--cyan)}
+.stab.on{background:var(--cdim);border-color:rgba(0,232,200,0.4);color:var(--cyan)}
+.showcase-panels{position:relative}
+.spanel{display:none;max-width:860px;margin:0 auto}
+.spanel.on{display:block}
+.spanel-img{border-radius:var(--r2);overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border)}
+.img-placeholder{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:4rem 2rem;background:linear-gradient(135deg,var(--bg2),var(--card2));min-height:380px}
+.img-placeholder p{font-size:0.8rem;color:var(--text3);text-align:center;max-width:200px;line-height:1.6;font-weight:500}
+.spanel-prompt{background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);padding:14px 16px;display:flex;align-items:flex-start;gap:10px;font-size:0.84rem;color:var(--text);font-weight:500;line-height:1.55;border-top:1px solid var(--border)}
+.sp-arrow{color:var(--cyan);font-weight:700;flex-shrink:0;margin-top:1px}
+.spanel-code{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;display:flex;flex-direction:column}
+.spanel-code-head{padding:12px 16px;background:var(--card2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:var(--text2);font-weight:600;flex-shrink:0}
+.scopy-btn{background:var(--cdim);border:1px solid rgba(0,232,200,0.25);color:var(--cyan);padding:5px 14px;border-radius:7px;font-size:0.74rem;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s}
+.scopy-btn:hover{background:rgba(0,232,200,0.2)}
+.spanel-pre{padding:1.25rem 1.5rem;font-family:'Courier New',monospace;font-size:0.76rem;line-height:1.8;color:#cdd6f4;overflow-x:auto;white-space:pre;flex:1;background:rgba(0,0,0,0.2)}
+/* VS COMPARISON */
+.vs-wrap{display:grid;grid-template-columns:1fr auto 1fr;gap:1.5rem;margin-top:3rem;align-items:start}
+.vs-card{border-radius:var(--r2);overflow:hidden;border:1px solid var(--border)}
+.vs-card.bad{border-color:rgba(240,64,160,0.2)}.vs-card.good{border-color:rgba(0,232,200,0.3);box-shadow:0 0 40px rgba(0,232,200,0.06)}
+.vs-header{padding:1rem 1.25rem;background:var(--card2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.vs-label{display:flex;align-items:center;gap:7px;font-size:0.82rem;font-weight:800;font-family:'Bricolage Grotesque',sans-serif}
+.bad-label{color:var(--pink)}.good-label{color:var(--cyan)}
+.vs-prompt-tag{font-size:0.74rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:6px;font-family:monospace;font-weight:600;white-space:nowrap}
+.vs-pre{padding:1.25rem;font-family:'Courier New',monospace;font-size:0.75rem;line-height:1.8;overflow-x:auto;white-space:pre;background:rgba(0,0,0,0.2);margin:0}
+.bad-pre{color:#f38ba8}.good-pre{color:#a6e3a1}
+.vs-issues{padding:1rem 1.25rem;display:flex;flex-direction:column;gap:0.5rem;border-top:1px solid var(--border);background:var(--card)}
+.good-issues{background:rgba(0,232,200,0.03)}
+.vs-issue{display:flex;align-items:center;gap:8px;font-size:0.82rem;font-weight:500;color:var(--text2)}
+.vs-divider{display:flex;align-items:center;justify-content:center;padding-top:3rem}
+.vs-badge{width:44px;height:44px;border-radius:50%;background:var(--card2);border:2px solid var(--border2);display:grid;place-items:center;font-family:'Bricolage Grotesque',sans-serif;font-size:0.78rem;font-weight:800;color:var(--text3)}
+@media(max-width:900px){.spanel{grid-template-columns:1fr}.vs-wrap{grid-template-columns:1fr;gap:1rem}.vs-divider{padding:0}.showcase-tabs{gap:0.4rem}}
+@media(max-width:500px){.stab{padding:8px 14px;font-size:0.76rem}}
+/* ── GENERATE STATE ── */
+.gen-loading{display:none;background:var(--card);border:1px solid rgba(0,232,200,0.2);border-radius:var(--r2);padding:2.5rem 2rem;margin-bottom:1.25rem;text-align:center}
+.gen-loading.on{display:block}
+.gl-icon{width:56px;height:56px;border-radius:16px;background:var(--cdim);border:1px solid rgba(0,232,200,0.2);display:grid;place-items:center;margin:0 auto 1.5rem;position:relative}
+.gl-icon svg{animation:pulse-ico 2s ease-in-out infinite}
+@keyframes pulse-ico{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(0.9)}}
+.gl-title{font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.35rem}
+.gl-sub{color:var(--text2);font-size:0.84rem;font-weight:400;margin-bottom:2rem;min-height:1.2em}
+.gl-bar-wrap{height:4px;background:var(--border2);border-radius:2px;overflow:hidden;margin-bottom:1.5rem;position:relative}
+.gl-bar{height:100%;width:0%;background:var(--grad);border-radius:2px;transition:width 0.4s ease}
+.gl-bar.indeterminate{width:40%;animation:slide 1.4s ease-in-out infinite}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}.gl-bar.indeterminate{width:30%}
+.gl-steps{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap}
+.gl-step{display:flex;align-items:center;gap:7px;font-size:0.78rem;font-weight:600;color:var(--text3);transition:color 0.3s}
+.gl-step.done{color:var(--cyan)}.gl-step.active{color:var(--text)}
+.gl-step-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;transition:all 0.3s}
+.gl-step.active .gl-step-dot{background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:blink 1s infinite}
+.gl-step.done .gl-step-dot{background:var(--cyan)}
+.ocard{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;display:none}
+.ocard.on{display:block}
+.ohead{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.otitle{font-family:'Bricolage Grotesque',sans-serif;font-size:0.92rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.odot{width:8px;height:8px;background:var(--cyan);border-radius:50%;flex-shrink:0}
+.cpbtn{display:flex;align-items:center;gap:6px;background:var(--cdim);border:1px solid rgba(0,232,200,0.25);color:var(--cyan);padding:7px 16px;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif}
+.cpbtn:hover{background:rgba(0,232,200,0.18)}
+.ocode{padding:1.5rem;font-family:'Courier New',monospace;font-size:0.78rem;line-height:1.8;background:rgba(0,0,0,0.3);max-height:400px;overflow-y:auto;white-space:pre-wrap;color:#a6e3a1}
+.hlist{display:flex;flex-direction:column;gap:0.8rem;margin-top:1.5rem}
+.regen-btn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.04);border:1px solid var(--border2);color:var(--text2);padding:7px 14px;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif}
+.regen-btn:hover{background:rgba(255,255,255,0.08);color:var(--text);border-color:var(--border2)}
+.regen-btn svg{transition:transform 0.4s}
+.regen-btn:hover svg{transform:rotate(-180deg)}
+.save-btn{display:flex;align-items:center;gap:6px;background:rgba(59,110,240,0.12);border:1px solid rgba(59,110,240,0.3);color:var(--blue);padding:7px 16px;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif}
+.save-btn:hover{background:rgba(59,110,240,0.22);border-color:rgba(59,110,240,0.5)}
+.save-btn.saved{background:rgba(0,232,200,0.12);border-color:rgba(0,232,200,0.3);color:var(--cyan)}
+.hrename{background:none;border:none;color:var(--text);font-size:0.86rem;font-weight:400;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;padding:2px 4px;border-radius:4px;flex:1;min-width:0;text-align:left;transition:background 0.2s}
+.hrename:hover{background:rgba(255,255,255,0.05)}
+.hrename-input{background:var(--bg);border:1px solid var(--cyan);color:var(--text);font-size:0.86rem;font-family:'Plus Jakarta Sans',sans-serif;padding:3px 8px;border-radius:6px;outline:none;flex:1;min-width:0}
+.hpencil{background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;border-radius:5px;transition:all 0.2s;display:flex;align-items:center;flex-shrink:0}
+.hpencil:hover{color:var(--cyan);background:var(--cdim)}
+.hitem:hover .hpencil{color:var(--text3)};border-radius:var(--r);padding:1.1rem 1.4rem;cursor:pointer;transition:all 0.2s;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;position:relative}
+.hitem:hover{border-color:rgba(0,232,200,0.25);background:var(--card2)}
+.hitem-main{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex:1;min-width:0}
+.hdelete{flex-shrink:0;background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;border-radius:6px;transition:all 0.2s;line-height:1;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.hdelete:hover{color:var(--pink);background:rgba(240,64,160,0.1)}
+/* CREDIT BUNDLES */
+.credit-bundle{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.25rem;background:var(--bg);border:1px solid var(--border2);border-radius:12px;cursor:pointer;transition:all 0.2s;position:relative}
+.credit-bundle:hover{border-color:rgba(0,232,200,0.35);background:rgba(0,232,200,0.04)}
+.credit-bundle.selected{border-color:var(--cyan);background:var(--cdim);box-shadow:0 0 0 1px var(--cyan)}
+.popular-bundle{border-color:rgba(0,232,200,0.25)}
+.bundle-badge{position:absolute;top:-10px;left:1rem;background:var(--grad);color:#000;font-size:0.66rem;font-weight:800;padding:3px 12px;border-radius:100px;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap}
+.bundle-left{}
+.bundle-amount{font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:700}
+.bundle-sub{font-size:0.76rem;color:var(--text3);margin-top:2px;font-weight:400}
+.bundle-price{font-family:'Bricolage Grotesque',sans-serif;font-size:1.2rem;font-weight:800;color:var(--cyan);flex-shrink:0}
+/* CONFIRM MODAL */
+.confirm-ovl{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.78);backdrop-filter:blur(10px);place-items:center;padding:1rem}
+.confirm-ovl.on{display:grid}
+.confirm-box{background:var(--card2);border:1px solid var(--border2);border-radius:var(--r2);padding:2rem 2rem 1.75rem;width:100%;max-width:380px;text-align:center;animation:fadeup 0.25s both}
+.confirm-box h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1.2rem;font-weight:800;margin-bottom:0.5rem}
+.confirm-box p{color:var(--text2);font-size:0.88rem;line-height:1.7;margin-bottom:1.75rem;font-weight:400}
+.confirm-btns{display:flex;gap:0.75rem}
+.confirm-btns button{flex:1;padding:12px;border-radius:10px;font-weight:700;font-size:0.9rem;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s}
+.cbtn-cancel{background:rgba(255,255,255,0.05);color:var(--text);border:1px solid var(--border2) !important}
+.cbtn-cancel:hover{background:rgba(255,255,255,0.09)}
+.cbtn-confirm{background:var(--cyan);color:#000}
+.cbtn-confirm:hover{opacity:0.88}
+.cbtn-confirm.danger{background:var(--pink)}
+.cbtn-confirm.danger:hover{opacity:0.88}
+.hprompt{font-size:0.86rem;color:var(--text);flex:1;line-height:1.55;min-width:0;word-break:break-word;font-weight:400}
+.hr2{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.htag{font-size:0.68rem;font-weight:700;padding:3px 10px;border-radius:100px;background:var(--cdim);border:1px solid rgba(0,232,200,0.2);color:var(--cyan);white-space:nowrap;letter-spacing:0.04em}
+.hdate{font-size:0.73rem;color:var(--text3);white-space:nowrap;font-weight:500}
+.empty{text-align:center;padding:4rem 2rem;color:var(--text3)}
+.eico{font-size:2.5rem;margin-bottom:0.75rem}
+.empty p{font-size:0.86rem;line-height:1.7;font-weight:400}
+.sgrid{display:flex;flex-direction:column;gap:1.25rem;margin-top:1.5rem}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.scard.danger{border-color:rgba(240,64,160,0.15)}
+.shead{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.scard.danger .shead{border-color:rgba(240,64,160,0.15)}
+.shead h3{font-family:'Bricolage Grotesque',sans-serif;font-size:0.92rem;font-weight:700}
+.shead h3.rd{color:var(--pink)}
+.srow{padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.srow:last-child{border-bottom:none}
+.sk{font-size:0.88rem;font-weight:600}
+.sv{font-size:0.86rem;color:var(--text3);font-weight:500}
+.sk-sub{font-size:0.76rem;color:var(--text3);margin-top:3px;font-weight:400}
+.pchip{background:var(--cdim);border:1px solid rgba(0,232,200,0.25);color:var(--cyan);font-size:0.72rem;font-weight:700;padding:4px 12px;border-radius:100px;white-space:nowrap;letter-spacing:0.04em;text-transform:uppercase}
+.sinp{background:var(--bg);border:1px solid var(--border2);border-radius:9px;padding:9px 13px;color:var(--text);font-size:0.86rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color 0.2s;width:220px;max-width:100%;font-weight:400}
+.sinp:focus{border-color:var(--cyan)}
+/* password wrap in settings */
+.sinp-wrap{position:relative;width:220px;max-width:100%}
+.sinp-wrap .sinp{width:100%;padding-right:38px}
+.sinp-wrap .eye-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%)}
+.sbtn{padding:9px 18px;border-radius:9px;font-weight:700;font-size:0.8rem;cursor:pointer;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif;border:none;white-space:nowrap;letter-spacing:0.02em}
+.sbtn.cy{background:var(--cyan);color:#000}.sbtn.cy:hover{opacity:0.85}
+.sbtn.gh{background:rgba(255,255,255,0.05);color:var(--text);border:1px solid var(--border2)}.sbtn.gh:hover{background:rgba(255,255,255,0.09)}
+.sbtn.rd{background:rgba(240,64,160,0.1);color:var(--pink);border:1px solid rgba(240,64,160,0.25)}.sbtn.rd:hover{background:rgba(240,64,160,0.2)}
+.nrow{padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);gap:1rem}
+.nrow:last-child{border-bottom:none}
+.ninfo h4{font-size:0.86rem;font-weight:600}
+.ninfo p{font-size:0.76rem;color:var(--text3);margin-top:2px;font-weight:400}
+.tog{width:40px;height:22px;background:var(--border2);border-radius:100px;cursor:pointer;position:relative;transition:background 0.25s;flex-shrink:0}
+.tog.on{background:var(--cyan)}.tog::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform 0.25s}
+.tog.on::after{transform:translateX(18px)}
+.brow{padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);gap:1rem;flex-wrap:wrap}
+.brow:last-child{border-bottom:none}
+.binfo{font-size:0.84rem;font-weight:600}
+.bdate{font-size:0.76rem;color:var(--text3);margin-top:2px;font-weight:400}
+.bamt{font-size:0.86rem;font-weight:700}
+.bst{font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:100px;letter-spacing:0.06em;text-transform:uppercase}
+.bst.paid{background:rgba(0,232,200,0.1);color:var(--cyan);border:1px solid rgba(0,232,200,0.2)}
+.bst.free{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border)}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;background:var(--card2);border:1px solid rgba(0,232,200,0.3);border-radius:11px;padding:12px 20px;font-size:0.84rem;color:var(--text);font-weight:600;box-shadow:var(--shadow);display:none;max-width:320px}
+.toast.on{display:block;animation:fadeup 0.3s both}
+.fab{display:none;position:fixed;bottom:1.25rem;right:1.25rem;z-index:150;background:var(--cyan);color:#000;border:none;width:46px;height:46px;border-radius:50%;font-size:1.1rem;cursor:pointer;box-shadow:0 0 24px rgba(0,232,200,0.4)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){.fgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){
+  nav{grid-template-columns:auto 1fr}
+  .nav-center{display:none}
+  .nav-right{justify-self:end}
+  .hbg{display:flex}
+  .dsb{position:fixed;top:68px;bottom:0;left:0;z-index:100;transform:translateX(-100%);width:235px !important}
+  .dsb.open{transform:translateX(0)}
+  .collapse-btn{display:none}
+  .fab{display:grid;place-items:center}
+  .dm{padding:1.25rem}
+  .gbot{flex-direction:column;align-items:stretch}
+  .gbtn2{justify-content:center}
+  .srow{flex-direction:column;align-items:flex-start}
+  .sinp,.sinp-wrap{width:100%}
+  .brow{flex-direction:column;align-items:flex-start;gap:0.5rem}
+  .pcard.hot{transform:none}
+  footer{flex-direction:column;text-align:center}
+  .flinks{justify-content:center}
+}
+@media(max-width:480px){
+  .fgrid{grid-template-columns:1fr}
+  .hero-btns{flex-direction:column;align-items:center}
+  .btn{width:100%;max-width:300px}
+  .pills{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
+  .pills::-webkit-scrollbar{display:none}
+  .stats{gap:1.5rem}
+  .modal{padding:2rem 1.5rem}
+}
+</style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2307070f'/><text x='16' y='23' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='20' fill='%2300e8c8'>B</text></svg>">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="go('home')">BloxyAI</div>
+  <div class="nav-center" id="navC">
+    <a onclick="sec('features')">Features</a>
+    <a onclick="sec('pricing')">Pricing</a>
+    <a onclick="sec('faq')">FAQ</a>
+    <a onclick="go('dash')" id="nDashLink" style="display:none;color:var(--cyan);font-weight:700">Dashboard</a>
+  </div>
+  <div class="nav-right" id="navR">
+    <a href="https://discord.gg/PLACEHOLDER" target="_blank" class="discord-btn">
+      <svg width="18" height="14" viewBox="0 0 71 55" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M60.105 4.898A58.55 58.55 0 0045.653.415a.22.22 0 00-.233.11 40.784 40.784 0 00-1.8 3.697c-5.456-.817-10.886-.817-16.23 0-.485-1.164-1.201-2.587-1.828-3.697a.228.228 0 00-.233-.11 58.386 58.386 0 00-14.451 4.483.207.207 0 00-.095.082C1.578 18.73-.944 32.144.293 45.39a.244.244 0 00.093.167c6.073 4.46 11.955 7.167 17.729 8.962a.23.23 0 00.249-.082 42.08 42.08 0 003.627-5.9.225.225 0 00-.123-.312 38.772 38.772 0 01-5.539-2.64.228.228 0 01-.022-.378c.372-.279.744-.569 1.1-.862a.22.22 0 01.23-.031c11.62 5.305 24.198 5.305 35.677 0a.219.219 0 01.233.028c.356.293.728.586 1.103.865a.228.228 0 01-.02.378 36.384 36.384 0 01-5.54 2.637.227.227 0 00-.121.315 47.249 47.249 0 003.624 5.897.225.225 0 00.249.084c5.801-1.795 11.684-4.502 17.757-8.961a.228.228 0 00.092-.164c1.48-15.315-2.48-28.618-10.497-40.412a.18.18 0 00-.093-.084zm-36.38 32.427c-3.497 0-6.38-3.211-6.38-7.156 0-3.944 2.827-7.156 6.38-7.156 3.583 0 6.437 3.24 6.38 7.156 0 3.945-2.827 7.156-6.38 7.156zm23.593 0c-3.498 0-6.38-3.211-6.38-7.156 0-3.944 2.826-7.156 6.38-7.156 3.582 0 6.437 3.24 6.38 7.156 0 3.945-2.826 7.156-6.38 7.156z"/></svg>
+      Discord
+    </a>
+    <a onclick="openM('login')" id="nLogin">Log In</a>
+    <button class="nav-cta" onclick="openM('signup')" id="nSignup">Start Free →</button>
+    <div class="nav-avatar" id="nAvatar" style="display:none" onclick="go('dash');setTimeout(()=>{showTab('settings',document.querySelectorAll('.ditem')[3]);document.querySelectorAll('.ditem')[3].classList.add('on');},50)" title="Account settings"></div>
+    <a onclick="doLogout()" id="nOut" style="display:none">Log Out</a>
+    <div class="hbg" onclick="mobNav()" id="hbg"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="mob-nav" id="mobN">
+  <a href="https://discord.gg/PLACEHOLDER" target="_blank" style="color:#7289da;font-weight:700">Join our Discord</a>
+  <a onclick="sec('features');mobNav()">Features</a>
+  <a onclick="sec('pricing');mobNav()">Pricing</a>
+  <a onclick="sec('faq');mobNav()">FAQ</a>
+  <a onclick="go('dash');mobNav()" id="mDash" style="display:none;color:var(--cyan)">Dashboard</a>
+  <a onclick="openM('login');mobNav()" id="mLogin">Log In</a>
+  <a onclick="openM('signup');mobNav()" id="mSignup" style="color:var(--cyan);font-weight:700">Start Free →</a>
+  <a onclick="doLogout();mobNav()" id="mOut" style="display:none">Log Out</a>
+</div>
+
+<!-- ════ HOME ════ -->
+<div class="page active" id="page-home">
+
+<section class="hero">
+  <div class="h-glow"></div><div class="h-grid"></div>
+  <div class="hero-in">
+    <div class="badge"><div class="bdot"></div>AI-Powered Roblox Development</div>
+    <h1>The only AI that writes<br><span class="gt">Roblox Lua code that works</span></h1>
+    <p class="hero-p">Describe any feature in plain English — leaderboards, combat systems, shops, GUIs. BloxyAI writes production-ready Lua code in seconds. Zero coding required.</p>
+    <div class="hero-btns">
+      <button class="btn p" onclick="handleCTA()">Start Building Free →</button>
+      <button class="btn s" onclick="sec('how')">See How It Works</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">2,400+</div><div class="stat-l">Creators Building</div></div>
+      <div class="stat"><div class="stat-n">48,000+</div><div class="stat-l">Scripts Generated</div></div>
+      <div class="stat"><div class="stat-n">5.0 ★</div><div class="stat-l">Average Rating</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SCRIPT SHOWCASE -->
+<section class="sec" id="showcase" style="position:relative;overflow:hidden;background:var(--bg);border-top:none">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(ellipse 120% 100% at 50% 50%,black 30%,transparent 100%);pointer-events:none"></div>
+  <div class="c">
+    <div class="stag">See It In Action</div>
+    <h2 class="sh">Any game feature.<br><span class="gt">Generated in seconds.</span></h2>
+    <p class="ss">Click any example below to see what BloxyAI generates for it.</p>
+  </div>
+  <div class="showcase-wrap">
+    <div class="showcase-tabs" id="showcaseTabs">
+      <button class="stab on" onclick="switchShowcase(0,this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.95-1.57l1.65-7.43H6"/></svg>
+        Shop System
+      </button>
+      <button class="stab" onclick="switchShowcase(1,this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        Combat System
+      </button>
+      <button class="stab" onclick="switchShowcase(2,this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Leaderboard
+      </button>
+      <button class="stab" onclick="switchShowcase(3,this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        GUI / UI
+      </button>
+      <button class="stab" onclick="switchShowcase(4,this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Daily Rewards
+      </button>
+    </div>
+    <div class="showcase-panels">
+      <div class="spanel on" id="sp0">
+        <div class="spanel-img">
+          <div class="img-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p>Replace with your Roblox shop screenshot</p>
+          </div>
+          <div class="spanel-prompt"><span class="sp-arrow">→</span>Create a coin shop with 3 items, gamepass integration, and a GUI that opens with a button</div>
+        </div>
+      </div>
+      <div class="spanel" id="sp1">
+        <div class="spanel-img">
+          <div class="img-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p>Replace with your combat gameplay screenshot</p>
+          </div>
+          <div class="spanel-prompt"><span class="sp-arrow">→</span>Add a sword combat system with damage, cooldown, and hit animations</div>
+        </div>
+      </div>
+      <div class="spanel" id="sp2">
+        <div class="spanel-img">
+          <div class="img-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p>Replace with your leaderboard screenshot</p>
+          </div>
+          <div class="spanel-prompt"><span class="sp-arrow">→</span>Add a global leaderboard tracking kills and deaths that saves with DataStore</div>
+        </div>
+      </div>
+      <div class="spanel" id="sp3">
+        <div class="spanel-img">
+          <div class="img-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p>Replace with your GUI screenshot</p>
+          </div>
+          <div class="spanel-prompt"><span class="sp-arrow">→</span>Make a health bar GUI that updates in real time and turns red when below 30%</div>
+        </div>
+      </div>
+      <div class="spanel" id="sp4">
+        <div class="spanel-img">
+          <div class="img-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p>Replace with your daily reward screenshot</p>
+          </div>
+          <div class="spanel-prompt"><span class="sp-arrow">→</span>Build a daily reward system that gives coins every 24 hours and tracks streaks</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec" id="how">
+  <div class="c"><div class="stag">How It Works</div><h2 class="sh">Three steps to ship faster</h2><p class="ss">No coding knowledge needed. Describe what you want and paste the result into Roblox Studio.</p></div>
+  <div class="steps">
+    <div class="sc">
+      <div class="snum">01</div>
+      <div style="width:40px;height:40px;border-radius:10px;background:var(--cdim);display:grid;place-items:center;margin-bottom:1rem">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <h3>Describe your feature</h3>
+      <p>Type what you want in plain English. "Add a coin shop", "Create a respawn animation", "Build a team system" — anything goes.</p>
+    </div>
+    <div class="sc">
+      <div class="snum">02</div>
+      <div style="width:40px;height:40px;border-radius:10px;background:var(--bdim);display:grid;place-items:center;margin-bottom:1rem">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <h3>AI generates Lua code</h3>
+      <p>BloxyAI's model — trained specifically on Roblox — generates clean, working Lua in under 10 seconds using proper Roblox services.</p>
+    </div>
+    <div class="sc">
+      <div class="snum">03</div>
+      <div style="width:40px;height:40px;border-radius:10px;background:var(--pdim);display:grid;place-items:center;margin-bottom:1rem">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      </div>
+      <h3>Copy and paste into Studio</h3>
+      <p>One click copies everything to your clipboard. Paste it into Roblox Studio ServerScriptService and your feature is live instantly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VS CHATGPT COMPARISON -->
+<section class="sec" id="comparison">
+  <div class="c">
+    <div class="stag">Why Not Just Use ChatGPT?</div>
+    <h2 class="sh">Generic AI vs.<br><span class="gt">Roblox-specific AI</span></h2>
+    <p class="ss">ChatGPT doesn't know Roblox. BloxyAI was built exclusively for it. Here's what that looks like in practice.</p>
+  </div>
+
+  <div class="vs-wrap">
+    <!-- ChatGPT side -->
+    <div class="vs-card bad">
+      <div class="vs-header">
+        <div class="vs-label bad-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          ChatGPT
+        </div>
+        <span class="vs-prompt-tag">"Add a leaderboard"</span>
+      </div>
+      <pre class="vs-pre bad-pre"><span class="cm">-- Generic, broken Lua output</span>
+<span class="cm">-- Uses wrong API calls</span>
+<span class="kw">local</span> leaderboard = {}
+
+<span class="cm">-- ERROR: game.Players doesn't work this way</span>
+<span class="kw">for</span> i, player <span class="kw">in</span> pairs(game.Players) <span class="kw">do</span>
+  table.insert(leaderboard, {
+    name = player.name, <span class="cm">-- wrong: should be .Name</span>
+    score = player.stats.kills <span class="cm">-- ERROR: doesn't exist</span>
+  })
+<span class="kw">end</span>
+
+<span class="cm">-- Missing: DataStore, leaderstats folder,</span>
+<span class="cm">-- PlayerAdded event, proper Roblox services</span>
+print(leaderboard)</pre>
+      <div class="vs-issues">
+        <div class="vs-issue"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Wrong API — code won't run</div>
+        <div class="vs-issue"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>No DataStore — data won't save</div>
+        <div class="vs-issue"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Missing leaderstats folder</div>
+        <div class="vs-issue"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Hours of debugging required</div>
+      </div>
+    </div>
+
+    <!-- VS divider -->
+    <div class="vs-divider">
+      <div class="vs-badge">VS</div>
+    </div>
+
+    <!-- BloxyAI side -->
+    <div class="vs-card good">
+      <div class="vs-header">
+        <div class="vs-label good-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          BloxyAI
+        </div>
+        <span class="vs-prompt-tag">"Add a leaderboard"</span>
+      </div>
+      <pre class="vs-pre good-pre"><span class="cm">-- BloxyAI: Works on paste, every time</span>
+<span class="kw">local</span> <span class="vr">Players</span> = game:<span class="fn">GetService</span>(<span class="str">"Players"</span>)
+<span class="kw">local</span> <span class="vr">DSS</span> = game:<span class="fn">GetService</span>(<span class="str">"DataStoreService"</span>)
+<span class="kw">local</span> <span class="vr">store</span> = DSS:<span class="fn">GetOrderedDataStore</span>(<span class="str">"Kills_v1"</span>)
+
+Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<span class="kw">function</span>(plr)
+  <span class="kw">local</span> <span class="vr">ls</span> = Instance.<span class="fn">new</span>(<span class="str">"Folder"</span>)
+  ls.Name = <span class="str">"leaderstats"</span>
+  ls.Parent = plr
+
+  <span class="kw">local</span> <span class="vr">kills</span> = Instance.<span class="fn">new</span>(<span class="str">"IntValue"</span>)
+  kills.Name = <span class="str">"Kills"</span>
+  kills.Value = store:<span class="fn">GetAsync</span>(plr.UserId) <span class="kw">or</span> <span class="fn">0</span>
+  kills.Parent = ls
+<span class="kw">end</span>)</pre>
+      <div class="vs-issues good-issues">
+        <div class="vs-issue"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Proper Roblox services used</div>
+        <div class="vs-issue"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>DataStore saves automatically</div>
+        <div class="vs-issue"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>leaderstats folder included</div>
+        <div class="vs-issue"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Paste and it just works</div>
+      </div>
+    </div>
+  </div>
+</section>
+  <div class="c"><div class="stag">Features</div><h2 class="sh">Everything you need to ship faster</h2><p class="ss">From combat to monetization — BloxyAI handles the boilerplate so you focus on what makes your game unique.</p></div>
+  <div class="fgrid">
+    <div class="fcard">
+      <div class="ficon" style="background:var(--cdim)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+      <h3>Instant Code Generation</h3><p>Type a prompt and get clean, working Lua scripts in under 10 seconds. No more searching the DevForum for boilerplate code.</p>
+    </div>
+    <div class="fcard">
+      <div class="ficon" style="background:var(--bdim)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <h3>7 Script Categories</h3><p>Combat, leaderboards, GUIs, monetization, admin tools, NPCs, and game mechanics — every category tagged and ready for Studio.</p>
+    </div>
+    <div class="fcard">
+      <div class="ficon" style="background:var(--pdim)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></div>
+      <h3>One-Click Copy</h3><p>Copy generated scripts to your clipboard and paste directly into Roblox Studio. No downloading files, no friction, just flow.</p>
+    </div>
+    <div class="fcard">
+      <div class="ficon" style="background:var(--cdim)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <h3>Saved Scripts</h3><p>Save any generated script to your personal library. Rename, search by category, and reload past scripts whenever you need them.</p>
+    </div>
+    <div class="fcard">
+      <div class="ficon" style="background:var(--bdim)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      <h3>Roblox-Specific AI</h3><p>Unlike ChatGPT, BloxyAI knows Roblox's APIs, DataStores, and Studio structure inside out. The code works on the first paste.</p>
+    </div>
+    <div class="fcard">
+      <div class="ficon" style="background:var(--pdim)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <h3>Live Usage Tracker</h3><p>Always know exactly how many credits you have left this month. Upgrade anytime to unlock more firepower for your studio.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS CAROUSEL -->
+<section class="carousel-sec">
+  <div class="carousel-head">
+    <div class="stag">Creators Love It</div>
+    <h2 class="sh">Built by devs, for devs</h2>
+  </div>
+  <div class="carousel-track-wrap">
+    <div class="carousel-track" id="carouselTrack"></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="sec alt" id="pricing">
+  <div class="c"><div class="stag">Pricing</div><h2 class="sh">Plans that scale with your studio</h2><p class="ss">Start free. Level up when you're ready. No hidden fees, no surprises.</p></div>
+  <div class="pgrid">
+    <!-- Trial note -->
+    <div style="grid-column:1/-1;background:var(--cdim);border:1px solid rgba(0,232,200,0.2);border-radius:var(--r);padding:1rem 1.5rem;display:flex;align-items:center;gap:12px;margin-bottom:0.5rem">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span style="font-size:0.86rem;font-weight:600;color:var(--text)">Every plan starts with a <span style="color:var(--cyan)">7-day free trial</span> — your card is not charged until day 8. Cancel anytime before then.</span>
+    </div>
+    <div class="pcard">
+      <div class="pname">Starter</div><div class="pdesc">For devs just getting started</div>
+      <div class="pprice">$9.99<sub>/mo</sub></div>
+      <div style="font-size:0.75rem;color:var(--cyan);font-weight:600;margin-top:6px;margin-bottom:0">7-day free trial</div>
+      <div class="pdiv"></div>
+      <ul class="pfeats">
+        <li><span class="ck">✓</span>50 credits / month</li>
+        <li><span class="ck">✓</span>All 7 script categories</li>
+        <li><span class="ck">✓</span>Credit history</li>
+        <li><span class="ck">✓</span>One-click copy</li>
+        <li class="no"><span class="ck">✗</span>Priority queue</li>
+        <li class="no"><span class="ck">✗</span>Priority support</li>
+      </ul>
+      <button class="pbtn gh" onclick="handleCTA()">Start Free Trial</button>
+    </div>
+    <div class="pcard hot">
+      <div class="htag">Most Popular</div>
+      <div class="pname">Creator</div><div class="pdesc">For serious devs shipping hits</div>
+      <div class="pprice" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">$19.99<sub style="-webkit-text-fill-color:var(--text3)">/mo</sub></div>
+      <div style="font-size:0.75rem;color:var(--cyan);font-weight:600;margin-top:6px;margin-bottom:0">7-day free trial</div>
+      <div class="pdiv"></div>
+      <ul class="pfeats">
+        <li><span class="ck">✓</span>200 credits / month</li>
+        <li><span class="ck">✓</span>All 7 script categories</li>
+        <li><span class="ck">✓</span>Full credit history</li>
+        <li><span class="ck">✓</span>One-click copy</li>
+        <li><span class="ck">✓</span>Priority generation queue</li>
+        <li><span class="ck">✓</span>Email support</li>
+      </ul>
+      <button class="pbtn cy" onclick="handleCTA()">Start Free Trial</button>
+    </div>
+    <div class="pcard">
+      <div class="pname">Studio</div><div class="pdesc">For teams with hits to maintain</div>
+      <div class="pprice">$49.99<sub>/mo</sub></div>
+      <div style="font-size:0.75rem;color:var(--cyan);font-weight:600;margin-top:6px;margin-bottom:0">7-day free trial</div>
+      <div class="pdiv"></div>
+      <ul class="pfeats">
+        <li><span class="ck">✓</span>600 credits / month</li>
+        <li><span class="ck">✓</span>All 7 script categories</li>
+        <li><span class="ck">✓</span>Full history + export</li>
+        <li><span class="ck">✓</span>One-click copy</li>
+        <li><span class="ck">✓</span>Priority generation queue</li>
+        <li><span class="ck">✓</span>Priority support</li>
+      </ul>
+      <button class="pbtn gh" onclick="handleCTA()">Start Free Trial</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="c"><div class="stag">FAQ</div><h2 class="sh">Got questions?</h2></div>
+  <div class="fw">
+    <div class="fi"><div class="fq" onclick="faqT(this)"><span>Do I need to know how to code?</span><span class="fico">+</span></div><div class="fa"><p>Not at all. BloxyAI is designed for non-coders. Describe what you want in plain English, copy the code, paste into Roblox Studio. Zero Lua knowledge required.</p></div></div>
+    <div class="fi"><div class="fq" onclick="faqT(this)"><span>Will the code actually work in Roblox Studio?</span><span class="fico">+</span></div><div class="fa"><p>Yes. BloxyAI is trained specifically on Roblox development and knows Roblox's APIs, services, and Studio conventions. Code is designed to work on paste without manual edits.</p></div></div>
+    <div class="fi"><div class="fq" onclick="faqT(this)"><span>What counts as one generation?</span><span class="fico">+</span></div><div class="fa"><p>Each time you click Generate and receive a code output counts as one generation. Viewing saved scripts, copying old results, or browsing the dashboard does not count toward your credit limit.</p></div></div>
+    <div class="fi"><div class="fq" onclick="faqT(this)"><span>Can I cancel my subscription anytime?</span><span class="fico">+</span></div><div class="fa"><p>Yes. Cancel anytime from Settings and you'll keep full access until the end of your billing period. No questions asked, no cancellation fees.</p></div></div>
+    <div class="fi"><div class="fq" onclick="faqT(this)"><span>What types of scripts can BloxyAI generate?</span><span class="fico">+</span></div><div class="fa"><p>Combat systems, leaderboards, GUIs, monetization (gamepasses, developer products), admin commands, NPC behaviors, DataStore systems, game mechanics, and much more.</p></div></div>
+    <div class="fi"><div class="fq" onclick="faqT(this)"><span>Is there a free trial?</span><span class="fico">+</span></div><div class="fa"><p>Yes — every plan comes with a 7-day free trial. You enter your card upfront but are not charged until day 8. During the trial you get 10 credits to test the product. Cancel before day 8 and you pay nothing.</p></div></div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="stag">Get Started Today</div>
+  <h2>Ready to build your<br><span class="gt">dream game?</span></h2>
+  <p>Join hundreds of Roblox creators already shipping faster with BloxyAI. Start free — no credit card needed.</p>
+  <button class="btn p" onclick="handleCTA()">Start Building Free →</button>
+</section>
+
+<footer>
+  <div class="flogo">BloxyAI</div>
+  <p>© 2025 BloxyAI. Not affiliated with Roblox Corporation.</p>
+  <div class="flinks"><a onclick="sec('features')">Features</a><a onclick="sec('pricing')">Pricing</a><a>Privacy Policy</a><a>Terms of Service</a></div>
+</footer>
+</div><!-- /home -->
+
+<!-- ════ DASHBOARD ════ -->
+<div class="page" id="page-dash">
+  <button class="fab" onclick="sbToggle()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="dw">
+    <aside class="dsb" id="dsb">
+      <div class="dsb-inner">
+      <div class="dsb-top">
+        <div class="dlbl">Main</div>
+        <div class="ditem on" onclick="showTab('generate',this)">
+          <span class="dico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>Generate
+        </div>
+        <div class="ditem" onclick="showTab('history',this)">
+          <span class="dico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg></span>Saved Scripts
+        </div>
+        <div class="dlbl">Account</div>
+        <div class="ditem" onclick="showTab('upgrade',this)">
+          <span class="dico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg></span>Upgrade Plan
+        </div>
+        <div class="ditem" onclick="showTab('settings',this)">
+          <span class="dico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>Settings
+        </div>
+        <div class="dlbl">Navigation</div>
+        <div class="ditem" onclick="go('home')">
+          <span class="dico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Home
+        </div>
+        <div class="ditem" onclick="doLogout()">
+          <span class="dico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>Log Out
+        </div>
+      </div>
+      <div class="dsb-bot">
+        <div class="tcard">
+          <div class="thead2">
+            <span class="tlbl">Credits</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="tnum" id="tokN">0/10</span>
+              <button onclick="openBuyCredits()" title="Buy more credits" style="width:18px;height:18px;background:var(--cyan);border:none;border-radius:4px;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:opacity 0.2s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="tbar"><div class="tfill" id="tokF" style="width:0%"></div></div>
+          <button class="ubtn" onclick="showTab('upgrade',document.querySelectorAll('.ditem')[2]);document.querySelectorAll('.ditem')[2].classList.add('on')">Upgrade Plan</button>
+        </div>
+      </div>
+      </div><!-- /dsb-inner -->
+    </aside>
+
+    <!-- COLLAPSE BUTTON -->
+    <button class="collapse-btn" id="collapseBtn" onclick="toggleSidebar()" title="Toggle sidebar">
+      <svg id="collapseIcon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+
+    <main class="dm">
+      <!-- GENERATE -->
+      <div id="tab-generate">
+        <div class="dmh"><h2>Generate Lua Code</h2><p>Describe any Roblox feature in plain English and get working code instantly</p></div>
+        <div class="gcard">
+          <div class="gtop">
+            <div class="pills">
+              <button class="pill on" onclick="setPill(this)">All</button>
+              <button class="pill" onclick="setPill(this)">Combat</button>
+              <button class="pill" onclick="setPill(this)">Leaderboard</button>
+              <button class="pill" onclick="setPill(this)">GUI / UI</button>
+              <button class="pill" onclick="setPill(this)">Monetization</button>
+              <button class="pill" onclick="setPill(this)">NPC</button>
+              <button class="pill" onclick="setPill(this)">Admin</button>
+              <button class="pill" onclick="setPill(this)">Mechanics</button>
+            </div>
+            <textarea class="ptxt" id="ptxt" rows="5" placeholder="Example: Add a leaderboard that tracks kills and deaths, saves with DataStore so data persists when players leave, and shows the top 10 players on screen..." oninput="updateCC()"></textarea>
+          </div>
+          <div class="gbot">
+            <span class="ccnt" id="ccnt">0 / 600 characters</span>
+            <button class="gbtn2" id="gbtn" onclick="doGen()"><div class="spin"></div><span class="bt">Generate Code <span style="opacity:0.5;font-size:0.75em;font-weight:500">Ctrl+↵</span></span></button>
+          </div>
+        </div>
+        <!-- LOADING STATE -->
+        <div class="gen-loading" id="genLoading">
+          <div class="gl-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="gl-title">BloxyAI is writing your script</div>
+          <div class="gl-sub" id="glSub">Analyzing your request...</div>
+          <div class="gl-bar-wrap"><div class="gl-bar" id="glBar"></div></div>
+          <div class="gl-steps">
+            <div class="gl-step active" id="gs1"><div class="gl-step-dot"></div>Reading prompt</div>
+            <div class="gl-step" id="gs2"><div class="gl-step-dot"></div>Writing Luau</div>
+            <div class="gl-step" id="gs3"><div class="gl-step-dot"></div>Validating code</div>
+            <div class="gl-step" id="gs4"><div class="gl-step-dot"></div>Done</div>
+          </div>
+        </div>
+
+        <div class="ocard" id="ocard">
+          <div class="ohead">
+            <div class="otitle"><div class="odot"></div>Generated Lua Code</div>
+            <div style="display:flex;gap:0.5rem;align-items:center">
+              <button class="regen-btn" onclick="regenScript()" title="Generate again with same prompt">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                Retry
+              </button>
+              <button class="save-btn" id="saveBtn" onclick="saveScript()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                Save
+              </button>
+              <button class="cpbtn" onclick="doCopy()">Copy Code</button>
+            </div>
+          </div>
+          <div class="ocode" id="ocode"></div>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div id="tab-history" style="display:none">
+        <div class="dmh"><h2>Saved Scripts</h2><p>Your saved scripts — click any to reload, rename with the pencil icon</p></div>
+        <div class="hlist" id="hlist"><div class="empty"><div class="eico">—</div><p>No saved scripts yet.<br>Generate a script and click Save to keep it here.</p></div></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="tab-settings" style="display:none">
+        <div class="dmh"><h2>Settings</h2><p>Manage your account, plan, and preferences</p></div>
+        <div class="sgrid">
+          <div class="scard">
+            <div class="shead">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <h3>Account Information</h3>
+            </div>
+            <div class="srow"><span class="sk">Email address</span><span class="sv" id="sEmail">—</span></div>
+            <div class="srow"><span class="sk">Current plan</span><span class="pchip" id="sPlan">Hobbyist</span></div>
+            <div class="srow"><span class="sk">Credits used</span><span class="sv" id="sUsed">0 / 10</span></div>
+            <div class="srow"><span class="sk">Member since</span><span class="sv" id="sJoined">—</span></div>
+          </div>
+
+          <div class="scard">
+            <div class="shead">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <h3>Change Password</h3>
+            </div>
+            <div class="srow">
+              <div><div class="sk">Current password</div></div>
+              <div class="sinp-wrap"><input class="sinp" type="password" id="curP" placeholder="Current password"><button class="eye-btn" onclick="toggleEye('curP',this)" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+            </div>
+            <div class="srow">
+              <div><div class="sk">New password</div><div class="sk-sub">Minimum 6 characters</div></div>
+              <div class="sinp-wrap"><input class="sinp" type="password" id="newP" placeholder="New password"><button class="eye-btn" onclick="toggleEye('newP',this)" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+            </div>
+            <div class="srow"><span></span><button class="sbtn cy" onclick="changePw()">Update Password</button></div>
+          </div>
+
+          <div class="scard">
+            <div class="shead">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              <h3>Subscription & Billing</h3>
+            </div>
+            <div class="srow"><div><div class="sk">Active plan</div><div class="sk-sub">Renews on the 1st of each month</div></div><span class="pchip" id="sPlan2">Hobbyist</span></div>
+            <div class="srow"><div><div class="sk">Need more credits?</div><div class="sk-sub">Top up anytime — credits never expire</div></div><button class="sbtn cy" onclick="openBuyCredits()">Buy Credits</button></div>
+            <div class="srow"><div><div class="sk">Cancel subscription</div><div class="sk-sub">Access continues until end of billing period</div></div><button class="sbtn gh" onclick="cancelSub()">Cancel Plan</button></div>
+          </div>
+
+          <div class="scard">
+            <div class="shead">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <h3>Billing History</h3>
+            </div>
+            <div class="brow"><div><div class="binfo">Hobbyist Plan</div><div class="bdate">Free — no charge</div></div><div style="display:flex;align-items:center;gap:0.75rem"><span class="bamt">$0.00</span><span class="bst free">Active</span></div></div>
+            <div style="padding:1rem 1.5rem;color:var(--text3);font-size:0.8rem;font-weight:400">Paid invoices will appear here after your first billing cycle.</div>
+          </div>
+
+          <div class="scard">
+            <div class="shead">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+              <h3>Notifications</h3>
+            </div>
+            <div class="nrow"><div class="ninfo"><h4>Credit used</h4><p>Notify when my code is ready</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="nrow"><div class="ninfo"><h4>Low credit balance</h4><p>Warn me when close to monthly credit limit</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="nrow"><div class="ninfo"><h4>Product updates</h4><p>New features from BloxyAI</p></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+            <div class="nrow"><div class="ninfo"><h4>Promotional emails</h4><p>Special offers and discount codes</p></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+
+          <div class="scard danger">
+            <div class="shead">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <h3 class="rd">Danger Zone</h3>
+            </div>
+            <div class="srow"><div><div class="sk">Log out of all devices</div><div class="sk-sub">Ends your current session immediately</div></div><button class="sbtn rd" onclick="doLogout()">Log Out</button></div>
+            <div class="srow"><div><div class="sk">Delete account</div><div class="sk-sub">Permanently deletes your account and all data</div></div><button class="sbtn rd" onclick="delAccount()">Delete Account</button></div>
+          </div>
+        </div>
+      </div>
+      <!-- UPGRADE -->
+      <div id="tab-upgrade" style="display:none">
+        <div class="dmh"><h2>Upgrade Your Plan</h2><p>Choose the plan that fits your studio</p></div>
+
+        <!-- Current plan banner -->
+        <div style="background:var(--cdim);border:1px solid rgba(0,232,200,0.2);border-radius:var(--r2);padding:1.25rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+          <div>
+            <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:3px">Current Plan</div>
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;font-weight:800" id="upCurrentPlan">Hobbyist (Free)</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:0.78rem;color:var(--text2);margin-bottom:3px">Credits used this month</div>
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:700" id="upUsed">0 / 10</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem">
+          <!-- Starter -->
+          <div class="pcard" id="upCard0">
+            <div class="pname">Starter</div>
+            <div class="pdesc">For devs just getting started</div>
+            <div class="pprice">$9.99<sub>/mo</sub></div>
+            <div class="pdiv"></div>
+            <ul class="pfeats">
+              <li><span class="ck">✓</span>50 credits / month</li>
+              <li><span class="ck">✓</span>All 7 script categories</li>
+              <li><span class="ck">✓</span>Credit history</li>
+              <li><span class="ck">✓</span>One-click copy</li>
+              <li class="no"><span class="ck">✗</span>Priority queue</li>
+              <li class="no"><span class="ck">✗</span>Priority support</li>
+            </ul>
+            <button class="pbtn gh" id="upBtn0" onclick="selectPlan(0)">Select Plan</button>
+          </div>
+          <!-- Creator -->
+          <div class="pcard hot" id="upCard1">
+            <div class="htag">Most Popular</div>
+            <div class="pname">Creator</div>
+            <div class="pdesc">For serious devs shipping hits</div>
+            <div class="pprice" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">$19.99<sub style="-webkit-text-fill-color:var(--text3)">/mo</sub></div>
+            <div class="pdiv"></div>
+            <ul class="pfeats">
+              <li><span class="ck">✓</span>200 credits / month</li>
+              <li><span class="ck">✓</span>All 7 script categories</li>
+              <li><span class="ck">✓</span>Full credit history</li>
+              <li><span class="ck">✓</span>One-click copy</li>
+              <li><span class="ck">✓</span>Priority generation queue</li>
+              <li><span class="ck">✓</span>Email support</li>
+            </ul>
+            <button class="pbtn cy" id="upBtn1" onclick="selectPlan(1)">Select Plan</button>
+          </div>
+          <!-- Studio -->
+          <div class="pcard" id="upCard2">
+            <div class="pname">Studio</div>
+            <div class="pdesc">For teams with hits to maintain</div>
+            <div class="pprice">$49.99<sub>/mo</sub></div>
+            <div class="pdiv"></div>
+            <ul class="pfeats">
+              <li><span class="ck">✓</span>600 credits / month</li>
+              <li><span class="ck">✓</span>All 7 script categories</li>
+              <li><span class="ck">✓</span>Full history + export</li>
+              <li><span class="ck">✓</span>One-click copy</li>
+              <li><span class="ck">✓</span>Priority generation queue</li>
+              <li><span class="ck">✓</span>Priority support</li>
+            </ul>
+            <button class="pbtn gh" id="upBtn2" onclick="selectPlan(2)">Select Plan</button>
+          </div>
+        </div>
+
+    </main>
+  </div>
+</div><!-- /dash -->
+
+<!-- MODALS -->
+<div class="ovl" id="loginOv">
+  <div class="modal">
+    <button class="mcl" onclick="closeM('loginOv')">✕</button>
+    <div class="mlogo">BloxyAI</div>
+    <h2>Welcome back</h2>
+    <p class="msub">Log in to continue building</p>
+    <div class="merr" id="liErr"></div>
+    <div class="fg"><label>Email</label><input type="email" id="liE" placeholder="you@example.com"></div>
+    <div class="fg"><label>Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="liP" placeholder="••••••••">
+        <button class="eye-btn" onclick="toggleEye('liP',this)" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <button class="mbtn" onclick="doLogin()">Log In</button>
+    <div class="msw">No account? <a onclick="openM('signup')">Sign up free</a></div>
+  </div>
+</div>
+
+<div class="ovl" id="signupOv">
+  <div class="modal">
+    <button class="mcl" onclick="closeM('signupOv')">✕</button>
+    <div class="mlogo">BloxyAI</div>
+    <h2>Create account</h2>
+    <p class="msub">Start with 10 free credits — no card needed</p>
+    <div class="merr" id="suErr"></div>
+    <div class="fg"><label>Email</label><input type="email" id="suE" placeholder="you@example.com"></div>
+    <div class="fg"><label>Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="suP" placeholder="At least 6 characters">
+        <button class="eye-btn" onclick="toggleEye('suP',this)" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <button class="mbtn" onclick="doSignup()">Create Free Account</button>
+    <div class="msw">Already have an account? <a onclick="openM('login')">Log in</a></div>
+  </div>
+</div>
+
+<div class="ovl" id="buyCreditsOvl">
+  <div class="modal" style="max-width:480px">
+    <button class="mcl" onclick="closeM('buyCreditsOvl')">✕</button>
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <div style="width:52px;height:52px;background:var(--cdim);border:1px solid rgba(0,232,200,0.2);border-radius:14px;display:grid;place-items:center;margin:0 auto 1rem">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:0.3rem">Top up your credits</h2>
+      <p style="color:var(--text2);font-size:0.86rem">Pick a credit bundle — they never expire and stack on top of your plan.</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem">
+      <div class="credit-bundle" onclick="selectBundle(this,50,'$4.99')" data-credits="50" data-price="$4.99">
+        <div class="bundle-left">
+          <div class="bundle-amount">50 Credits</div>
+          <div class="bundle-sub">Great for a quick top-up</div>
+        </div>
+        <div class="bundle-price">$4.99</div>
+      </div>
+      <div class="credit-bundle popular-bundle" onclick="selectBundle(this,200,'$14.99')" data-credits="200" data-price="$14.99">
+        <div class="bundle-badge">Best Value</div>
+        <div class="bundle-left">
+          <div class="bundle-amount">200 Credits</div>
+          <div class="bundle-sub">Save vs buying smaller bundles</div>
+        </div>
+        <div class="bundle-price">$14.99</div>
+      </div>
+      <div class="credit-bundle" onclick="selectBundle(this,600,'$34.99')" data-credits="600" data-price="$34.99">
+        <div class="bundle-left">
+          <div class="bundle-amount">600 Credits</div>
+          <div class="bundle-sub">Best for power users & studios</div>
+        </div>
+        <div class="bundle-price">$34.99</div>
+      </div>
+    </div>
+
+    <button class="mbtn" id="buyCreditsBtn" onclick="confirmBuyCredits()" style="opacity:0.4;pointer-events:none">Select a bundle above</button>
+    <p style="text-align:center;color:var(--text3);font-size:0.76rem;margin-top:1rem">Stripe payments coming soon. Email <span style="color:var(--cyan)">support@bloxyai.com</span> to purchase credits manually.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="confirm-ovl" id="confirmOvl">
+  <div class="confirm-box">
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmMsg">This action cannot be undone.</p>
+    <div class="confirm-btns">
+      <button class="cbtn-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="cbtn-confirm" id="confirmOkBtn" onclick="confirmOk()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const APIKEY='YOUR_API_KEY_HERE';
+let CU=null;
+
+// reviews data
+const REVIEWS=[
+  {name:'@DeforsonDevYT',role:'Roblox Developer',q:'It\'s a very efficient tool to speed up your programming. While helping in areas where you get stuck, it overall helps the dev experience a lot.',avatar:'https://www.gravatar.com/avatar/a1?d=retro&s=40',col:'#e8522a',init:'D'},
+  {name:'@smellybumb5',role:'Game Creator',q:'BloxyAI allowed me to code scripts I couldnt do before and learn off them. It\'s hassle free unlike other AI tools, putting the scripts into the right modules.',avatar:'',col:'#3b82f6',init:'S'},
+  {name:'@xanderll_2009',role:'Hobbyist Dev',q:'It significantly cut the time it took to code my game. It was great for quickly prototyping small features, but also proved useful in speeding up coding on my larger projects.',avatar:'',col:'#8b5cf6',init:'X'},
+  {name:'@KostoxDev',role:'Indie Studio',q:'It\'s simple interface and the way scripts are actually inserted into modules to troubleshoot and build — this tool is genuinely different from anything else.',avatar:'',col:'#f59e0b',init:'K'},
+  {name:'@lumix_builds',role:'Roblox Dev • 500K visits',q:'The generation speed is insane. I described a full inventory system and it spat out perfect code in like 8 seconds. Absolutely wild.',avatar:'',col:'#10b981',init:'L'},
+  {name:'@nxova_',role:'Hobbyist Developer',q:'I\'ve tried every AI coding tool. BloxyAI is the only one that actually understands Roblox properly. No more fixing broken ChatGPT output.',avatar:'',col:'#ef4444',init:'N'},
+  {name:'@arctic_games',role:'Studio Lead',q:'Switched our whole pipeline to BloxyAI. Our ship time went from weeks to days. The AI just gets Roblox in a way nothing else does.',avatar:'',col:'#06b6d4',init:'A'},
+  {name:'@zephyrbuilds',role:'Game Developer • 1M visits',q:'Generated a full DataStore system, a shop, and a daily reward system in one session. This tool is genuinely game-changing for any Roblox dev.',avatar:'',col:'#f040a0',init:'Z'},
+  {name:'@solaris_rbx',role:'Frontend Developer',q:'The GUI generation is phenomenal. I asked for a modern inventory UI and it gave me something better than I could have coded myself.',avatar:'',col:'#00e8c8',init:'S'},
+  {name:'@pixelforge22',role:'Roblox Creator',q:'Finally a tool built FOR Roblox devs. Not a generic AI wrapper. Real Roblox knowledge baked in. Worth every penny of the subscription.',avatar:'',col:'#a855f7',init:'P'},
+  {name:'@tenzordev',role:'New Creator',q:'I\'m not a coder at all. With BloxyAI I built my first game with working combat, a leaderboard, and GUI in a single weekend.',avatar:'',col:'#3b6ef0',init:'T'},
+  {name:'@devrix99',role:'Indie Studio Owner',q:'We use BloxyAI for our whole team. It saves hours every week. The history feature alone is worth the price of the plan.',avatar:'',col:'#f97316',init:'D'},
+];
+
+// Roblox-style avatar SVGs (simple character silhouettes)
+const AVATAR_COLORS=['#e8522a','#3b82f6','#8b5cf6','#f59e0b','#10b981','#ef4444','#06b6d4','#f040a0','#00e8c8','#a855f7','#3b6ef0','#f97316'];
+function makeAvatar(init,col){
+  return `<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <rect width="40" height="40" rx="8" fill="${col}"/>
+    <rect x="14" y="6" width="12" height="12" rx="3" fill="rgba(255,255,255,0.9)"/>
+    <path d="M8 34c0-7 4-11 12-11s12 4 12 11" fill="rgba(255,255,255,0.9)"/>
+  </svg>`;
+}
+
+function buildCarousel(){
+  const track=document.getElementById('carouselTrack');
+  const all=[...REVIEWS,...REVIEWS];
+  track.innerHTML=all.map((r,i)=>`
+    <div class="rcard">
+      <div class="rcard-top">
+        <div class="rcard-avatar">${makeAvatar(r.init,AVATAR_COLORS[i%AVATAR_COLORS.length])}</div>
+        <div class="rcard-userinfo">
+          <div class="rname">${r.name}</div>
+          <div class="rsub">${r.role}</div>
+        </div>
+      </div>
+      <p>${r.q}</p>
+    </div>`).join('');
+}
+
+function switchShowcase(i, el) {
+  document.querySelectorAll('.spanel').forEach(p => p.classList.remove('on'));
+  document.getElementById('sp' + i).classList.add('on');
+  document.querySelectorAll('.stab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+}
+function copyShowcase(btn) {
+  const pre = btn.closest('.spanel-code').querySelector('.spanel-pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+function handleCTA(){
+  if(CU){
+    go('dash');
+    setTimeout(()=>{showTab('upgrade',document.querySelectorAll('.ditem')[2]);document.querySelectorAll('.ditem')[2].classList.add('on');},50);
+  }else{openM('signup');}
+}
+
+const PLANS=[
+  {name:'Starter',limit:50,price:'$9.99'},
+  {name:'Creator',limit:200,price:'$19.99'},
+  {name:'Studio',limit:600,price:'$49.99'}
+];
+
+function selectPlan(i){
+  if(!CU)return;
+  const plan=PLANS[i];
+  const cur=CU.plan||'Trial';
+  if(cur===plan.name){toast('You are already on the '+plan.name+' plan.');return;}
+  showConfirm(
+    'Switch to '+plan.name+'?',
+    'Upgrade to '+plan.name+' ('+plan.price+'/mo) — '+plan.limit+' credits/month. Stripe billing coming soon — your plan will be updated manually.',
+    'Confirm',false,
+    ()=>{
+      const users=getU();
+      users[CU.email].plan=plan.name;
+      users[CU.email].limit=plan.limit;
+      users[CU.email].trial=false;
+      saveU(users);CU={email:CU.email,...users[CU.email]};
+      rdash();refreshUpgradeTab();
+      toast('Plan updated to '+plan.name+'. Billing will be confirmed shortly.');
+    }
+  );
+}
+
+function refreshUpgradeTab(){
+  if(!CU)return;
+  const u=getU()[CU.email];if(!u)return;
+  const curPlan=(u.plan==='Hobbyist')?'':(u.plan||'');
+  const isTopPlan=(!u.trial && u.plan==='Studio');
+  const el=document.getElementById('upCurrentPlan');
+  const el2=document.getElementById('upUsed');
+  const dmh=document.querySelector('#tab-upgrade .dmh p');
+  if(el)el.textContent=u.trial?'Trial':(u.plan||'Starter');
+  if(el2)el2.textContent=(u.used||0)+' / '+(u.limit||10);
+  if(dmh){
+    const h2=document.querySelector('#tab-upgrade .dmh h2');
+    if(h2)h2.textContent=isTopPlan?'Manage Your Plan':'Upgrade Your Plan';
+    dmh.textContent=isTopPlan?'You\'re already on our best plan — you can downgrade anytime below.':'Choose the plan that fits your studio';
+  }
+  PLANS.forEach((p,i)=>{
+    const btn=document.getElementById('upBtn'+i);
+    const card=document.getElementById('upCard'+i);
+    if(!btn||!card)return;
+    if(p.name===curPlan&&!u.trial){
+      btn.textContent='Current Plan';btn.className='pbtn gh';btn.disabled=true;
+      card.style.outline='2px solid rgba(0,232,200,0.5)';
+    }else{
+      btn.textContent='Select Plan';btn.className=i===1?'pbtn cy':'pbtn gh';btn.disabled=false;
+      card.style.outline='none';
+    }
+  });
+}
+
+// ROUTING
+function go(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  window.scrollTo(0,0);
+  if(p==='dash'){
+    rdash();
+    showTab('generate',document.querySelectorAll('.ditem')[0]);
+    document.querySelectorAll('.ditem')[0].classList.add('on');
+    const gl=document.getElementById('genLoading');if(gl){gl.classList.remove('on');gl.style.display='none';}
+    const oc=document.getElementById('ocard');if(oc){oc.classList.remove('on');oc.style.display='none';}
+  }
+}
+function sec(id){
+  go('home');
+  setTimeout(()=>{const e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})},60);
+}
+
+// NAV
+function mobNav(){document.getElementById('mobN').classList.toggle('open')}
+function toggleSidebar(){
+  const dsb=document.getElementById('dsb');
+  const btn=document.getElementById('collapseBtn');
+  const icon=document.getElementById('collapseIcon');
+  const collapsed=dsb.classList.toggle('collapsed');
+  btn.style.left=collapsed?'0':'235px';
+  icon.style.transform=collapsed?'rotate(180deg)':'rotate(0deg)';
+}
+// Ctrl+Enter to generate
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    const ptxt=document.getElementById('ptxt');
+    if(document.activeElement===ptxt||document.getElementById('page-dash')?.classList.contains('active')){
+      e.preventDefault();doGen();
+    }
+  }
+});
+function syncNav(){
+  const on=!!CU;
+  const hide=(ids,h)=>ids.forEach(id=>{const e=document.getElementById(id);if(e)e.style.display=h?'none':'';});
+  hide(['nLogin','nSignup'],on);
+  hide(['nOut','nDashLink'],!on);
+  hide(['mLogin','mSignup'],on);
+  hide(['mOut','mDash'],!on);
+  // avatar
+  const av=document.getElementById('nAvatar');
+  if(av){
+    av.style.display=on?'grid':'none';
+    if(on&&CU)av.textContent=(CU.email||'?')[0].toUpperCase();
+  }
+}
+
+// AUTH
+function getU(){return JSON.parse(localStorage.getItem('bai_u')||'{}')}
+function saveU(u){localStorage.setItem('bai_u',JSON.stringify(u))}
+function openM(t){closeM('loginOv');closeM('signupOv');document.getElementById(t==='login'?'loginOv':'signupOv').classList.add('on')}
+// BUY CREDITS
+let _selectedBundle=null;
+function openBuyCredits(){
+  _selectedBundle=null;
+  document.querySelectorAll('.credit-bundle').forEach(b=>b.classList.remove('selected'));
+  const btn=document.getElementById('buyCreditsBtn');
+  if(btn){btn.textContent='Select a bundle above';btn.style.opacity='0.4';btn.style.pointerEvents='none';}
+  closeM('loginOv');closeM('signupOv');closeM('confirmOvl');
+  document.getElementById('buyCreditsOvl').classList.add('on');
+}
+function selectBundle(el,credits,price){
+  document.querySelectorAll('.credit-bundle').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  _selectedBundle={credits,price};
+  const btn=document.getElementById('buyCreditsBtn');
+  btn.textContent='Buy '+credits+' Credits for '+price;
+  btn.style.opacity='1';btn.style.pointerEvents='auto';
+}
+function confirmBuyCredits(){
+  if(!_selectedBundle)return;
+  closeM('buyCreditsOvl');
+  // Stripe not connected yet — show confirmation + email
+  showConfirm(
+    'Purchase '+_selectedBundle.credits+' Credits',
+    'Stripe payments are coming soon. To purchase '+_selectedBundle.credits+' credits for '+_selectedBundle.price+' right now, email support@bloxyai.com with your account email and we\'ll add them manually within 24 hours.',
+    'Got it',false,
+    ()=>toast('Email sent to support@bloxyai.com — credits will be added within 24h.')
+  );
+}
+function closeM(id){
+  const e=document.getElementById(id);if(e)e.classList.remove('on');
+}
+document.querySelectorAll('.ovl').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on')}));
+
+function toggleEye(inputId,btn){
+  const inp=document.getElementById(inputId);
+  if(!inp){// settings inline input — find sibling
+    const wrap=btn.closest('.sinp-wrap');
+    if(wrap){const si=wrap.querySelector('.sinp');si.type=si.type==='password'?'text':'password';btn.style.color=si.type==='text'?'var(--cyan)':'var(--text3)';return;}
+  }
+  inp.type=inp.type==='password'?'text':'password';
+  btn.style.color=inp.type==='text'?'var(--cyan)':'var(--text3)';
+}
+
+function doSignup(){
+  const email=document.getElementById('suE').value.trim();
+  const pass=document.getElementById('suP').value;
+  const err=document.getElementById('suErr');
+  err.classList.remove('on');
+  if(!email.includes('@')){err.textContent='Please enter a valid email address.';err.classList.add('on');return}
+  if(pass.length<6){err.textContent='Password must be at least 6 characters.';err.classList.add('on');return}
+  const users=getU();
+  if(users[email]){err.textContent='An account with this email already exists.';err.classList.add('on');return}
+  users[email]={pass,plan:'Starter',limit:10,used:0,history:[],joined:new Date().toLocaleDateString(),trial:true,trialStart:Date.now()};
+  saveU(users);CU={email,...users[email]};localStorage.setItem('bai_s',email);
+  closeM('signupOv');syncNav();go('dash');
+  toast('Welcome to BloxyAI — your 7-day trial has started. You have 10 credits to try it out.');
+}
+function doLogin(){
+  const email=document.getElementById('liE').value.trim();
+  const pass=document.getElementById('liP').value;
+  const err=document.getElementById('liErr');
+  err.classList.remove('on');
+  const users=getU();
+  if(!users[email]||users[email].pass!==pass){err.textContent='Incorrect email or password. Please try again.';err.classList.add('on');return}
+  CU={email,...users[email]};
+  // migrate legacy accounts
+  if(users[email].plan==='Hobbyist'||!users[email].trial){
+    users[email].plan='Starter';users[email].trial=true;
+    users[email].trialStart=users[email].trialStart||Date.now();
+    saveU(users);CU={email,...users[email]};
+  }
+  localStorage.setItem('bai_s',email);
+  closeM('loginOv');syncNav();go('dash');
+}
+
+function restoreSess(){
+  const email=localStorage.getItem('bai_s');
+  if(!email)return;
+  const u=getU()[email];
+  if(u){
+    if(u.plan==='Hobbyist'||!u.hasOwnProperty('trial')){
+      const users=getU();
+      users[email].plan='Starter';users[email].trial=true;
+      users[email].trialStart=users[email].trialStart||Date.now();
+      saveU(users);
+    }
+    CU={email,...getU()[email]};syncNav();
+  }
+}
+
+// DASHBOARD
+function rdash(){
+  if(!CU)return;
+  const u=getU()[CU.email];if(!u)return;
+  CU={email:CU.email,...u};
+  const used=u.used||0,lim=u.limit||10;
+  const isTopPlan=(!u.trial && u.plan==='Studio');
+  // trial expiry check
+  let trialDaysLeft=7;
+  if(u.trial&&u.trialStart){
+    const days=Math.floor((Date.now()-u.trialStart)/(1000*60*60*24));
+    trialDaysLeft=Math.max(0,7-days);
+    if(trialDaysLeft===0){
+      const users=getU();users[CU.email].trial=false;users[CU.email].limit=0;
+      saveU(users);CU={email:CU.email,...users[CU.email]};
+    }
+  }
+  document.getElementById('tokN').textContent=used+'/'+lim;
+  document.getElementById('tokF').style.width=Math.min(lim>0?(used/lim)*100:100,100)+'%';
+  document.getElementById('sEmail').textContent=CU.email;
+  document.getElementById('sJoined').textContent=u.joined||'—';
+  document.getElementById('sUsed').textContent=used+' / '+lim;
+  const rawPlan=u.plan||'Starter';
+  const planLabel=u.trial?'Trial — '+trialDaysLeft+' days left':(rawPlan==='Hobbyist'?'Starter Trial':rawPlan);
+  ['sPlan','sPlan2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=planLabel});
+  const upEl=document.getElementById('upCurrentPlan');if(upEl)upEl.textContent=planLabel;
+  const upEl2=document.getElementById('upUsed');if(upEl2)upEl2.textContent=used+' / '+lim;
+  // hide upgrade UI if on top plan
+  const ubtn=document.querySelector('.ubtn');
+  const upgradeItem=document.querySelector('.ditem[onclick*="upgrade"]');
+  if(isTopPlan){
+    if(ubtn){ubtn.textContent='You\'re on the best plan';ubtn.style.background='var(--card2)';ubtn.style.color='var(--text3)';ubtn.style.cursor='default';ubtn.onclick=null;}
+    if(upgradeItem){upgradeItem.style.display='';upgradeItem.childNodes.forEach(n=>{if(n.nodeType===3&&n.textContent.trim())n.textContent='Manage Plan';});}
+  }else{
+    if(ubtn){ubtn.textContent='Upgrade Plan';ubtn.style.background='';ubtn.style.color='';ubtn.style.cursor='';ubtn.onclick=()=>{showTab('upgrade',upgradeItem);if(upgradeItem)upgradeItem.classList.add('on');};}
+    if(upgradeItem){upgradeItem.style.display='';upgradeItem.childNodes.forEach(n=>{if(n.nodeType===3&&n.textContent.trim())n.textContent='Upgrade Plan';});}
+  }
+  renderHist(u.history||[]);
+}
+function showTab(name,el){
+  ['generate','history','settings','upgrade'].forEach(t=>{const e=document.getElementById('tab-'+t);if(e)e.style.display=t===name?'':'none'});
+  document.querySelectorAll('.ditem').forEach(i=>i.classList.remove('on'));
+  if(el)el.classList.add('on');
+  if(window.innerWidth<820)document.getElementById('dsb').classList.remove('open');
+  if(name==='upgrade')refreshUpgradeTab();
+}
+function setPill(el){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));el.classList.add('on')}
+function updateCC(){const v=document.getElementById('ptxt').value.length;document.getElementById('ccnt').textContent=v+' / 600 characters'}
+
+// LOADING ANIMATION
+let glTimer=null;
+function startLoading(){
+  const gl=document.getElementById('genLoading');
+  gl.style.display='';gl.classList.add('on');
+  // hide output card cleanly
+  const oc=document.getElementById('ocard');
+  oc.style.display='none';oc.classList.remove('on');
+  const steps=['gs1','gs2','gs3','gs4'];
+  const msgs=['Analyzing your request...','Writing Lua code...','Validating Roblox services...','Finalizing your script...'];
+  const bar=document.getElementById('glBar');
+  const sub=document.getElementById('glSub');
+  steps.forEach(s=>{const e=document.getElementById(s);if(e)e.className='gl-step';});
+  bar.style.width='0%';bar.classList.remove('indeterminate');
+  document.getElementById('gs1').classList.add('active');
+  sub.textContent=msgs[0];
+  let step=0;
+  const targets=[18,55,80,95];
+  bar.style.width=targets[0]+'%';
+  clearInterval(glTimer);
+  glTimer=setInterval(()=>{
+    if(step<3){
+      const se=document.getElementById(steps[step]);if(se)se.className='gl-step done';
+      step++;
+      const ne=document.getElementById(steps[step]);if(ne)ne.classList.add('active');
+      sub.textContent=msgs[step];
+      bar.style.width=targets[step]+'%';
+    }
+  },2200);
+}
+function stopLoading(){
+  clearInterval(glTimer);
+  ['gs1','gs2','gs3','gs4'].forEach(s=>{const e=document.getElementById(s);if(e)e.className='gl-step done';});
+  const bar=document.getElementById('glBar');if(bar)bar.style.width='100%';
+  const sub=document.getElementById('glSub');if(sub)sub.textContent='Script ready!';
+  setTimeout(()=>{
+    const gl=document.getElementById('genLoading');
+    if(gl){gl.classList.remove('on');}
+  },600);
+}
+
+function showOutput(code){
+  const oc=document.getElementById('ocard');
+  oc.style.display='';oc.classList.add('on');
+  document.getElementById('ocode').textContent=code;
+}
+
+async function doGen(){
+  if(!CU){openM('login');return;}
+  const users=getU();const u=users[CU.email];
+  if(!u){toast('Session error — please log in again.');doLogout();return;}
+  // check limit — 0 means trial expired or no plan
+  if(u.limit===0||u.used>=u.limit){
+    if(u.trial){
+      toast('Your trial has ended. Choose a plan to keep building.');
+      const upgradeItem=document.querySelector('.ditem[onclick*="upgrade"]');
+      showTab('upgrade',upgradeItem);if(upgradeItem)upgradeItem.classList.add('on');
+    } else {
+      openBuyCredits();
+    }
+    return;
+  }
+  const prompt=document.getElementById('ptxt').value.trim();
+  if(!prompt){toast('Please describe what you want to build first.');return;}
+  if(!APIKEY||APIKEY==='YOUR_API_KEY_HERE'){
+    toast('API key not set — add your key to the HTML file first.');return;
+  }
+  const btn=document.getElementById('gbtn');btn.classList.add('ld');btn.disabled=true;
+  startLoading();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,
+        system:'You are BloxyAI, a Roblox Lua code generator. Your ONLY output is raw Lua code — nothing else. NEVER use markdown, NEVER use backticks, NEVER write python, NEVER explain anything, NEVER include preamble or postamble. Output ONLY valid Luau code that works in Roblox Studio. Start your response with -- or local or game: — never with a word, sentence, or backtick. Use game:GetService() for all services. If the request is unclear, still output working Lua code for the closest matching Roblox feature.',
+        messages:[{role:'user',content:prompt}]})
+    });
+    const data=await res.json();
+    if(data.error){throw new Error(data.error.message||'API error');}
+    const raw=data.content?.[0]?.text||'-- Error: no response received.';
+    const code=raw.replace(/^```[\w]*\n?/gm,'').replace(/```\s*$/gm,'').trim();
+    // do NOT auto-save — user saves manually
+    // just update used count and rdash
+    u.used=(u.used||0)+1;
+    users[CU.email]=u;saveU(users);CU={email:CU.email,...u};
+    rdash();
+    // reset save button
+    const sb=document.getElementById('saveBtn');
+    if(sb){sb.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg> Save';sb.className='save-btn';}
+    stopLoading();
+    setTimeout(()=>showOutput(code),650);
+    toast('Code generated — click Copy then paste into Roblox Studio.');
+  }catch(err){
+    console.error('BloxyAI error:',err);
+    stopLoading();
+    setTimeout(()=>showOutput('-- Error: '+(err.message||'Connection failed. Check your API key.')),650);
+    toast('Generation failed — check your API key.');
+  }
+  btn.classList.remove('ld');btn.disabled=false;
+}
+function doCopy(){
+  const code=document.getElementById('ocode').textContent;
+  const b=document.querySelector('.cpbtn');
+  function showCopied(){
+    b.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+    b.style.background='rgba(0,232,200,0.25)';b.style.borderColor='rgba(0,232,200,0.5)';
+    setTimeout(()=>{b.innerHTML='Copy Code';b.style.background='';b.style.borderColor='';},2500);
+    toast('Code copied — paste it into Roblox Studio.');
+  }
+  // try modern clipboard API first
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(code).then(showCopied).catch(()=>fallbackCopy());
+  } else {
+    fallbackCopy();
+  }
+  function fallbackCopy(){
+    // works on file:// and older browsers
+    const ta=document.createElement('textarea');
+    ta.value=code;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.focus();ta.select();
+    try{document.execCommand('copy');showCopied();}
+    catch(e){b.textContent='Select & copy manually';setTimeout(()=>b.textContent='Copy Code',2000);}
+    document.body.removeChild(ta);
+  }
+}
+function regenScript(){
+  // reset save button state then re-run same prompt
+  const sb=document.getElementById('saveBtn');
+  if(sb){sb.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg> Save';sb.className='save-btn';}
+  doGen();
+}
+function saveScript(){
+  if(!CU)return;
+  const code=document.getElementById('ocode').textContent;
+  const prompt=document.getElementById('ptxt').value.trim();
+  if(!code||code.startsWith('-- Error'))return;
+  const users=getU();const u=users[CU.email];
+  u.history=u.history||[];
+  if(u.history.some(h=>h.code===code)){toast('This script is already saved.');return;}
+  u.history.unshift({name:prompt.length>45?prompt.slice(0,45)+'…':prompt,prompt,code,date:new Date().toLocaleDateString(),cat:document.querySelector('.pill.on')?.textContent?.trim()||'All'});
+  if(u.history.length>200)u.history=u.history.slice(0,200);
+  users[CU.email]=u;saveU(users);CU={email:CU.email,...u};
+  const sb=document.getElementById('saveBtn');
+  if(sb){sb.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg> Saved!';sb.className='save-btn saved';}
+  renderHist(u.history);
+  toast('Script saved to Saved Scripts.');
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function renderHist(hist){
+  const el=document.getElementById('hlist');
+  if(!hist||!hist.length){
+    el.innerHTML='<div class="empty"><div class="eico">—</div><p>No saved scripts yet.<br>Generate a script and click Save to keep it here.</p></div>';
+    return;
+  }
+  el.innerHTML=hist.map((item,i)=>`
+    <div class="hitem" id="hitem-${i}" style="display:flex;align-items:center;gap:0.75rem">
+      <div style="flex:1;min-width:0;cursor:pointer;display:flex;align-items:center;gap:0.5rem" onclick="loadH(${i})">
+        <span class="hrename" id="hname-${i}">${esc(item.name||item.prompt)}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.4rem;flex-shrink:0">
+        <span class="hdate">${esc(item.date)}</span>
+        <button class="hpencil" onclick="event.stopPropagation();renameScript(${i})" title="Rename">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="hdelete" onclick="event.stopPropagation();deleteHist(${i})" title="Delete">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>`).join('');
+}
+function renameScript(i){
+  const nameEl=document.getElementById('hname-'+i);
+  if(!nameEl)return;
+  const current=nameEl.textContent;
+  const input=document.createElement('input');
+  input.className='hrename-input';input.value=current;
+  nameEl.replaceWith(input);input.focus();input.select();
+  function commit(){
+    const newName=input.value.trim()||current;
+    const users=getU();const u=users[CU.email];
+    if(u.history[i])u.history[i].name=newName;
+    users[CU.email]=u;saveU(users);CU={email:CU.email,...u};
+    renderHist(u.history);toast('Script renamed.');
+  }
+  input.addEventListener('blur',commit);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter')input.blur();if(e.key==='Escape'){input.value=current;input.blur();}});
+}
+function deleteHist(i){
+  const users=getU();const u=users[CU.email];
+  u.history.splice(i,1);
+  users[CU.email]=u;saveU(users);CU={email:CU.email,...u};
+  renderHist(u.history);
+  toast('Script removed from saved scripts.');
+}
+function loadH(i){
+  const users=getU();
+  if(!CU||!users[CU.email])return;
+  const item=users[CU.email].history[i];
+  if(!item)return;
+  document.getElementById('ptxt').value=item.prompt;
+  updateCC();
+  // hide loading, show output
+  const gl=document.getElementById('genLoading');gl.classList.remove('on');gl.style.display='none';
+  showOutput(item.code);
+  showTab('generate',document.querySelectorAll('.ditem')[0]);
+  document.querySelectorAll('.ditem')[0].classList.add('on');
+}
+
+// CONFIRM SYSTEM
+let _confirmCallback=null;
+function showConfirm(title,msg,okLabel,danger,cb){
+  document.getElementById('confirmTitle').textContent=title;
+  document.getElementById('confirmMsg').textContent=msg;
+  const btn=document.getElementById('confirmOkBtn');
+  btn.textContent=okLabel;
+  btn.className='cbtn-confirm'+(danger?' danger':'');
+  _confirmCallback=cb;
+  document.getElementById('confirmOvl').classList.add('on');
+}
+function closeConfirm(){document.getElementById('confirmOvl').classList.remove('on');_confirmCallback=null}
+function confirmOk(){const cb=_confirmCallback;closeConfirm();if(cb)cb()}
+document.getElementById('confirmOvl').addEventListener('click',e=>{if(e.target===document.getElementById('confirmOvl'))closeConfirm()});
+
+function doLogout(){
+  showConfirm('Log out of BloxyAI?','You will need to log back in to access your dashboard and credit history.','Log Out',false,()=>{
+    CU=null;localStorage.removeItem('bai_s');syncNav();go('home');
+  });
+}
+function changePw(){
+  const cur=document.getElementById('curP').value;
+  const nw=document.getElementById('newP').value;
+  const users=getU();
+  if(users[CU.email].pass!==cur){toast('Current password is incorrect.');return}
+  if(nw.length<6){toast('New password must be at least 6 characters.');return}
+  users[CU.email].pass=nw;saveU(users);
+  document.getElementById('curP').value='';document.getElementById('newP').value='';
+  toast('Password updated successfully.');
+}
+function cancelSub(){
+  showConfirm('Cancel subscription?','You will keep your current plan access until the end of your billing period, then revert to 10 credits/month.','Cancel Plan',false,()=>{
+    const users=getU();
+    users[CU.email].cancelledAt=Date.now();
+    users[CU.email].pendingDowngrade=true;
+    saveU(users);CU={email:CU.email,...users[CU.email]};
+    rdash();toast('Subscription cancelled. Your plan continues until end of billing period.');
+  });
+}
+function delAccount(){
+  showConfirm('Delete your account?','This permanently deletes your account and all credit history. This cannot be undone.','Delete Account',true,()=>{
+    const users=getU();delete users[CU.email];saveU(users);
+    CU=null;localStorage.removeItem('bai_s');syncNav();go('home');
+    toast('Account deleted.');
+  });
+}
+function faqT(el){el.closest('.fi').classList.toggle('open')}
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');
+  clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('on'),3500);
+}
+
+// INIT
+restoreSess();syncNav();buildCarousel();
+</script>
+</body>
+</html>
