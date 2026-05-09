@@ -1248,7 +1248,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
 
 <script>
 const APIKEY='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';
-const _SB=window.supabase.createClient('https://kjbtfpqtqlmoeqivntmi.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqYnRmcHF0cWxtb2VxaXZudG1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxOTg1MzAsImV4cCI6MjA5Mzc3NDUzMH0.36NWUvGx0YgYGmR7-_4UTCJJRvqGZefyE3hrmMVA3TQ');
+let _SB=null;
 let CU=null;
 
 // reviews data
@@ -1426,8 +1426,20 @@ function syncNav(){
 }
 
 // AUTH
+// AUTH MODALS
+function openM(t){
+  closeM('loginOv');closeM('signupOv');closeM('buyCreditsOvl');
+  document.getElementById(t==='login'?'loginOv':'signupOv').classList.add('on');
+}
+function closeM(id){const e=document.getElementById(id);if(e)e.classList.remove('on');}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.ovl').forEach(o=>o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('on')}));
+  document.getElementById('confirmOvl').addEventListener('click',function(e){if(e.target===document.getElementById('confirmOvl'))closeConfirm()});
+});
+
 // ── SUPABASE AUTH & DATA ──
 async function doSignup(){
+  if(!_SB){toast('Connection error. Please refresh the page.');return;}
   const email=document.getElementById('suE').value.trim();
   const pass=document.getElementById('suP').value;
   const btn=document.querySelector('#signupOv .mbtn');
@@ -1454,6 +1466,7 @@ async function doSignup(){
 }
 
 async function doLogin(){
+  if(!_SB){toast('Connection error. Please refresh the page.');return;}
   const email=document.getElementById('liE').value.trim();
   const pass=document.getElementById('liP').value;
   const btn=document.querySelector('#loginOv .mbtn');
@@ -1478,6 +1491,7 @@ async function restoreSess(){
 }
 
 async function rdash(){
+  if(!_SB){toast('Connection error. Please refresh the page.');return;}
   if(!CU)return;
   const{data:profile}=await _SB.from('profiles').select('*').eq('id',CU.id).single();
   if(!profile)return;
@@ -1517,6 +1531,7 @@ async function rdash(){
 }
 
 async function doGen(){
+  if(!_SB){toast('Connection error. Please refresh the page.');return;}
   if(!CU){openM('login');return;}
   const{data:profile}=await _SB.from('profiles').select('*').eq('id',CU.id).single();
   if(!profile){toast('Session error — please log in again.');return;}
@@ -1563,6 +1578,7 @@ async function doGen(){
 }
 
 async function saveScript(){
+  if(!_SB){toast('Connection error. Please refresh the page.');return;}
   if(!CU)return;
   const code=document.getElementById('ocode').textContent;
   const prompt=document.getElementById('ptxt').value.trim();
@@ -1601,12 +1617,14 @@ function renderHist(scripts){
 }
 
 async function deleteHist(scriptId){
+  if(!_SB){toast('Connection error. Please refresh the page.');return;}
   await _SB.from('saved_scripts').delete().eq('id',scriptId);
   rdash();
   toast('Script removed from saved scripts.');
 }
 
 async function renameScript(scriptId,i){
+  if(!_SB){toast('Connection error. Please refresh the page.');return;}
   const nameEl=document.getElementById('hname-'+i);
   if(!nameEl)return;
   const current=nameEl.textContent;
@@ -1650,6 +1668,7 @@ async function changePw(){
 }
 
 async function cancelSub(){
+  if(!_SB){toast('Connection error. Please refresh the page.');return;}
   showConfirm('Cancel subscription?','You will keep your current plan access until the end of your billing period.','Cancel Plan',false,async()=>{
     await _SB.from('profiles').update({pending_downgrade:true}).eq('id',CU.id);
     rdash();toast('Subscription cancelled. Your plan continues until end of billing period.');
@@ -1657,6 +1676,7 @@ async function cancelSub(){
 }
 
 async function delAccount(){
+  if(!_SB){toast('Connection error. Please refresh the page.');return;}
   showConfirm('Delete your account?','This permanently deletes your account and all data. This cannot be undone.','Delete Account',true,async()=>{
     await _SB.from('saved_scripts').delete().eq('user_id',CU.id);
     await _SB.from('profiles').delete().eq('id',CU.id);
@@ -1665,13 +1685,217 @@ async function delAccount(){
     toast('Account deleted.');
   });
 }
-.classList.toggle('open')}
+function faqT(el){el.closest('.fi').classList.toggle('open')}
+function setPill(el){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));el.classList.add('on')}
+function updateCC(){const v=document.getElementById('ptxt').value.length;document.getElementById('ccnt').textContent=v+' / 600 characters'}
+function toggleEye(inputId,btn){
+  const inp=document.getElementById(inputId);
+  if(!inp){const wrap=btn.closest('.sinp-wrap');if(wrap){const si=wrap.querySelector('.sinp');si.type=si.type==='password'?'text':'password';btn.style.color=si.type==='text'?'var(--cyan)':'var(--text3)';return;}}
+  if(inp){inp.type=inp.type==='password'?'text':'password';btn.style.color=inp.type==='text'?'var(--cyan)':'var(--text3)';}
+}
+function showTab(name,el){
+  ['generate','history','settings','upgrade','ideas','debugger'].forEach(t=>{const e=document.getElementById('tab-'+t);if(e)e.style.display=t===name?'':'none'});
+  document.querySelectorAll('.ditem').forEach(i=>i.classList.remove('on'));
+  if(el)el.classList.add('on');
+  if(window.innerWidth<820){const d=document.getElementById('dsb');if(d)d.classList.remove('open');}
+  if(name==='upgrade')refreshUpgradeTab();
+  if(name==='ideas')refreshLockedTab('ideas');
+  if(name==='debugger')refreshLockedTab('debugger');
+}
+function tryLockedTab(name,requiredPlan){
+  const planOrder=['Starter','Creator','Studio'];
+  const u=CU;
+  const hasAccess=u&&!u.trial&&planOrder.indexOf(u.plan||'Starter')>=planOrder.indexOf(requiredPlan);
+  showTab(name,null);
+  if(hasAccess){document.getElementById(name+'Locked').style.display='none';document.getElementById(name+'Unlocked').style.display='';}
+  else{document.getElementById(name+'Locked').style.display='';document.getElementById(name+'Unlocked').style.display='none';}
+}
+function refreshLockedTab(name){
+  const requiredPlan=name==='ideas'?'Creator':'Studio';
+  const planOrder=['Starter','Creator','Studio'];
+  const u=CU;
+  const hasAccess=u&&!u.trial&&planOrder.indexOf(u.plan||'Starter')>=planOrder.indexOf(requiredPlan);
+  const lockedEl=document.getElementById(name+'Locked');
+  const unlockedEl=document.getElementById(name+'Unlocked');
+  if(lockedEl)lockedEl.style.display=hasAccess?'none':'';
+  if(unlockedEl)unlockedEl.style.display=hasAccess?'':'none';
+}
+// CONFIRM
+let _confirmCallback=null;
+function showConfirm(title,msg,okLabel,danger,cb){
+  document.getElementById('confirmTitle').textContent=title;
+  document.getElementById('confirmMsg').textContent=msg;
+  const btn=document.getElementById('confirmOkBtn');
+  btn.textContent=okLabel;
+  btn.className='cbtn-confirm'+(danger?' danger':'');
+  _confirmCallback=cb;
+  document.getElementById('confirmOvl').classList.add('on');
+}
+function closeConfirm(){document.getElementById('confirmOvl').classList.remove('on');_confirmCallback=null;}
+function confirmOk(){const cb=_confirmCallback;closeConfirm();if(cb)cb();}
+document.getElementById('confirmOvl').addEventListener('click',function(e){if(e.target===document.getElementById('confirmOvl'))closeConfirm();});
+// COPY
+function doCopy(){
+  const code=document.getElementById('ocode').textContent;
+  const b=document.querySelector('.cpbtn');
+  function showCopied(){b.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';b.style.background='rgba(0,232,200,0.25)';b.style.borderColor='rgba(0,232,200,0.5)';setTimeout(()=>{b.innerHTML='Copy Code';b.style.background='';b.style.borderColor='';},2500);toast('Code copied — paste it into Roblox Studio.');}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(code).then(showCopied).catch(()=>fallbackCopy());}
+  else{fallbackCopy();}
+  function fallbackCopy(){const ta=document.createElement('textarea');ta.value=code;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');showCopied();}catch(e){b.textContent='Copy failed';setTimeout(()=>b.textContent='Copy Code',2000);}document.body.removeChild(ta);}
+}
+function regenScript(){
+  const sb=document.getElementById('saveBtn');
+  if(sb){sb.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg> Save';sb.className='save-btn';}
+  doGen();
+}
+function showOutput(code){
+  const oc=document.getElementById('ocard');oc.style.display='';oc.classList.add('on');
+  document.getElementById('ocode').textContent=code;
+}
+function showErr(id,msg){
+  const e=document.getElementById(id);e.textContent=msg;e.classList.remove('on');void e.offsetWidth;e.classList.add('on');e.style.display='block';
+}
+function setMbtnLoading(btn,loading,defaultText){
+  if(loading){btn.classList.add('loading');btn.disabled=true;btn.querySelector('span').textContent='Loading...';}
+  else{btn.classList.remove('loading');btn.disabled=false;btn.querySelector('span').textContent=defaultText;}
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+// LOADING
+let glTimer=null;
+function startLoading(){
+  const gl=document.getElementById('genLoading');gl.style.display='';gl.classList.add('on');
+  const oc=document.getElementById('ocard');oc.style.display='none';oc.classList.remove('on');
+  const steps=['gs1','gs2','gs3','gs4'];
+  const msgs=['Analyzing your request...','Writing Lua code...','Validating Roblox services...','Finalizing your script...'];
+  const bar=document.getElementById('glBar');const sub=document.getElementById('glSub');
+  steps.forEach(s=>{const e=document.getElementById(s);if(e)e.className='gl-step';});
+  bar.style.width='0%';bar.classList.remove('indeterminate');
+  document.getElementById('gs1').classList.add('active');sub.textContent=msgs[0];
+  let step=0;const targets=[18,55,80,95];bar.style.width=targets[0]+'%';
+  clearInterval(glTimer);
+  glTimer=setInterval(function(){
+    if(step<3){
+      const se=document.getElementById(steps[step]);if(se)se.className='gl-step done';
+      step++;const ne=document.getElementById(steps[step]);if(ne)ne.classList.add('active');
+      sub.textContent=msgs[step];bar.style.width=targets[step]+'%';
+    }
+  },2200);
+}
+function stopLoading(){
+  clearInterval(glTimer);
+  ['gs1','gs2','gs3','gs4'].forEach(s=>{const e=document.getElementById(s);if(e)e.className='gl-step done';});
+  const bar=document.getElementById('glBar');if(bar)bar.style.width='100%';
+  const sub=document.getElementById('glSub');if(sub)sub.textContent='Script ready!';
+  setTimeout(function(){const gl=document.getElementById('genLoading');if(gl)gl.classList.remove('on');},600);
+}
+// BUY CREDITS
+let _selectedBundle=null;
+function openBuyCredits(){
+  _selectedBundle=null;
+  document.querySelectorAll('.credit-bundle').forEach(b=>b.classList.remove('selected'));
+  const btn=document.getElementById('buyCreditsBtn');
+  if(btn){btn.textContent='Select a bundle above';btn.style.opacity='0.4';btn.style.pointerEvents='none';}
+  closeM('loginOv');closeM('signupOv');closeM('confirmOvl');
+  document.getElementById('buyCreditsOvl').classList.add('on');
+}
+function selectBundle(el,credits,price){
+  document.querySelectorAll('.credit-bundle').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');_selectedBundle={credits,price};
+  const btn=document.getElementById('buyCreditsBtn');
+  btn.textContent='Buy '+credits+' Credits for '+price;btn.style.opacity='1';btn.style.pointerEvents='auto';
+}
+function confirmBuyCredits(){
+  if(!_selectedBundle)return;
+  const links={30:'https://buy.stripe.com/dRmfZhbsD8z6aaAeaKcQU03',75:'https://buy.stripe.com/6oUfZh68j16E4Qg8QqcQU04',150:'https://buy.stripe.com/00waEXfIT8z61E4giScQU05'};
+  const url=links[_selectedBundle.credits];
+  if(url){closeM('buyCreditsOvl');window.open(url,'_blank');}
+}
+// GAME IDEAS
+function updateIdeaCC(){const v=document.getElementById('ideaTxt').value.length;document.getElementById('ideaCcnt').textContent=v+' / 400 characters';}
+const IDEA_SYSTEM='You are a Roblox game design expert who deeply understands what makes Roblox games go viral. Generate a detailed game concept. Include: Game Name, Concept, Core Loop, Key Features (4-5 bullets), Monetization Ideas (3 gamepass ideas), Why It Will Go Viral. Be specific and creative for Roblox.';
+const RANDOM_PROMPTS=['Generate a completely random trending Roblox game idea based on what is currently going viral','Give me a unique Roblox simulator game idea with high viral potential','Generate a Roblox horror game concept that would trend with the current audience','Give me a Roblox tycoon game idea with a unique twist','Generate a Roblox roleplay game idea that would get millions of visits','Give me a Roblox battle game concept with a fresh mechanic that would go viral','Generate a Roblox obby game idea with a unique theme','Give me a Roblox social game idea where players interact creatively','Generate a Roblox survival game concept with strong multiplayer hooks','Give me a Roblox tower defense game with a completely new twist'];
+function doRandomIdea(){
+  const random=RANDOM_PROMPTS[Math.floor(Math.random()*RANDOM_PROMPTS.length)];
+  document.getElementById('ideaTxt').value=random;updateIdeaCC();doIdea();
+}
+async function doIdea(){
+  if(!_SB){toast('Connection error. Please refresh.');return;}
+  const prompt=document.getElementById('ideaTxt').value.trim();
+  if(!prompt){toast('Describe a theme or genre first, or click Random.');return;}
+  const btn=document.getElementById('ideaBtn');btn.classList.add('ld');btn.disabled=true;
+  const loading=document.getElementById('ideaLoading');loading.style.display='';loading.classList.add('on');
+  document.getElementById('ideaCard').style.display='none';document.getElementById('ideaCard').classList.remove('on');
+  document.getElementById('ideaBar').style.width='60%';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,system:IDEA_SYSTEM,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error.message);
+    const idea=(data.content&&data.content[0]&&data.content[0].text)||'No idea generated.';
+    document.getElementById('ideaBar').style.width='100%';
+    setTimeout(function(){loading.classList.remove('on');const card=document.getElementById('ideaCard');card.style.display='';card.classList.add('on');document.getElementById('ideaOut').textContent=idea;},500);
+  }catch(err){loading.classList.remove('on');toast('Generation failed.');}
+  btn.classList.remove('ld');btn.disabled=false;
+}
+function copyIdea(){
+  const text=document.getElementById('ideaOut').textContent;
+  const b=document.querySelector('#ideaCard .cpbtn');
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy';},2000);});}
+  else{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);b.textContent='Copied!';setTimeout(function(){b.textContent='Copy';},2000);}
+}
+// SCRIPT DEBUGGER
+function updateDebugCC(){const v=document.getElementById('debugTxt').value.length;document.getElementById('debugCcnt').textContent=v+' / 2000 characters';}
+async function doDebug(){
+  if(!_SB){toast('Connection error. Please refresh.');return;}
+  const code=document.getElementById('debugTxt').value.trim();
+  if(!code){toast('Paste your Lua code first.');return;}
+  const btn=document.getElementById('debugBtn');btn.classList.add('ld');btn.disabled=true;
+  const loading=document.getElementById('debugLoading');loading.style.display='';loading.classList.add('on');
+  document.getElementById('debugCard').style.display='none';document.getElementById('debugCard').classList.remove('on');
+  document.getElementById('debugBar').style.width='60%';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,system:'You are a Roblox Lua debugger. Find all bugs and return ONLY the fixed working Lua code with brief inline comments marking what you fixed. No explanations outside the code, no markdown, no backticks.',messages:[{role:'user',content:'Debug and fix this Roblox Lua code:\n\n'+code}]})});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error.message);
+    const fixed=(data.content&&data.content[0]&&data.content[0].text)||'-- Could not debug this script.';
+    const clean=fixed.replace(/^```[\w]*\n?/gm,'').replace(/```\s*$/gm,'').trim();
+    document.getElementById('debugBar').style.width='100%';
+    setTimeout(function(){loading.classList.remove('on');const card=document.getElementById('debugCard');card.style.display='';card.classList.add('on');document.getElementById('debugOut').textContent=clean;},500);
+  }catch(err){loading.classList.remove('on');toast('Debug failed.');}
+  btn.classList.remove('ld');btn.disabled=false;
+}
+function copyDebug(){
+  const code=document.getElementById('debugOut').textContent;
+  const b=document.querySelector('#debugCard .cpbtn');
+  function showCopied(){b.innerHTML='Copied!';setTimeout(function(){b.textContent='Copy Code';},2000);}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(code).then(showCopied);}
+  else{const ta=document.createElement('textarea');ta.value=code;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');showCopied();}catch(e){}document.body.removeChild(ta);}
+}
+// KEYBOARD SHORTCUT
+document.addEventListener('keydown',function(e){
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    const ptxt=document.getElementById('ptxt');
+    if(document.activeElement===ptxt||(document.getElementById('page-dash')&&document.getElementById('page-dash').classList.contains('active'))){
+      e.preventDefault();doGen();
+    }
+  }
+});
 function toast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');
   clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('on'),3500);
 }
 
 // INIT
+function initSupabase(){
+  try{
+    if(window.supabase){
+      _SB=window.supabase.createClient(
+        'https://kjbtfpqtqlmoeqivntmi.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqYnRmcHF0cWxtb2VxaXZudG1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxOTg1MzAsImV4cCI6MjA5Mzc3NDUzMH0.36NWUvGx0YgYGmR7-_4UTCJJRvqGZefyE3hrmMVA3TQ'
+      );
+    }
+  }catch(e){console.warn('Supabase unavailable:',e);}
+}
+initSupabase();
 restoreSess().then(()=>syncNav());buildCarousel();
 </script>
 </body>
