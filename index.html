@@ -1239,7 +1239,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
 </div>
 
 <script>
-const APIKEY='YOUR_API_KEY_HERE';
+const WORKER_URL='https://bloxyai.bloxyyai.workers.dev';
 let _SB=null;
 let CU=null;
 
@@ -1449,8 +1449,8 @@ async function doSignup(){
   CU={id:data.user.id,email,plan:'Starter',credits_used:0,credits_limit:3,trial:true,trial_start:Date.now()};
   fetch('https://app.loops.so/api/v1/contacts/create',{
     method:'POST',
-    headers:{'Authorization':'Bearer a4ec136eeee2dcdd3887dad9dac459cc','Content-Type':'application/json'},
-    body:JSON.stringify({email,source:'bloxyai_signup',userGroup:'trial'})
+    headers:{'Authorization':'Bearer f37e4727f4077b65b21ae9433c6b2af3','Content-Type':'application/json'},
+    body:JSON.stringify({email,firstName:'',userGroup:'trial',source:'bloxyai'})
   }).catch(()=>{});
   setMbtnLoading(btn,false,'Create Free Account');
   closeM('signupOv');syncNav();go('dash');
@@ -1537,13 +1537,12 @@ async function doGen(){
   }
   const prompt=document.getElementById('ptxt').value.trim();
   if(!prompt){toast('Please describe what you want to build first.');return;}
-  if(!APIKEY||APIKEY==='YOUR_API_KEY_HERE'){toast('API key not set — add your key to the HTML file first.');return;}
   const btn=document.getElementById('gbtn');btn.classList.add('ld');btn.disabled=true;
   startLoading();
   try{
     const res=await fetch('https://bloxyai.bloxyyai.workers.dev',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01',},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,
         system:'You are BloxyAI, a Roblox Lua code generator. Your ONLY output is raw Lua code — nothing else. NEVER use markdown, NEVER use backticks, NEVER write python, NEVER explain anything, NEVER include preamble or postamble. Output ONLY valid Luau code that works in Roblox Studio. Start your response with -- or local or game: — never with a word, sentence, or backtick. Use game:GetService() for all services. If the request is unclear, still output working Lua code for the closest matching Roblox feature.',
         messages:[{role:'user',content:prompt}]})
@@ -1819,7 +1818,7 @@ async function doIdea(){
   document.getElementById('ideaCard').style.display='none';document.getElementById('ideaCard').classList.remove('on');
   document.getElementById('ideaBar').style.width='60%';
   try{
-    const res=await fetch('https://bloxyai.bloxyyai.workers.dev',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01',},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,system:IDEA_SYSTEM,messages:[{role:'user',content:prompt}]})});
+    const res=await fetch('https://bloxyai.bloxyyai.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,system:IDEA_SYSTEM,messages:[{role:'user',content:prompt}]})});
     const data=await res.json();
     if(data.error)throw new Error(data.error.message);
     const idea=(data.content&&data.content[0]&&data.content[0].text)||'No idea generated.';
@@ -1845,7 +1844,7 @@ async function doDebug(){
   document.getElementById('debugCard').style.display='none';document.getElementById('debugCard').classList.remove('on');
   document.getElementById('debugBar').style.width='60%';
   try{
-    const res=await fetch('https://bloxyai.bloxyyai.workers.dev',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01',},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,system:'You are a Roblox Lua debugger. Find all bugs and return ONLY the fixed working Lua code with brief inline comments marking what you fixed. No explanations outside the code, no markdown, no backticks.',messages:[{role:'user',content:'Debug and fix this Roblox Lua code:\n\n'+code}]})});
+    const res=await fetch('https://bloxyai.bloxyyai.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,system:'You are a Roblox Lua debugger. Find all bugs and return ONLY the fixed working Lua code with brief inline comments marking what you fixed. No explanations outside the code, no markdown, no backticks.',messages:[{role:'user',content:'Debug and fix this Roblox Lua code:\n\n'+code}]})});
     const data=await res.json();
     if(data.error)throw new Error(data.error.message);
     const fixed=(data.content&&data.content[0]&&data.content[0].text)||'-- Could not debug this script.';
