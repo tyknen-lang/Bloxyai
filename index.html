@@ -45,8 +45,6 @@ nav{
 .discord-btn:hover{background:rgba(88,101,242,0.3) !important;border-color:rgba(88,101,242,0.7);color:#fff !important;transform:translateY(-1px);box-shadow:0 4px 16px rgba(88,101,242,0.3)}
 .nav-avatar{width:34px;height:34px;border-radius:50%;background:var(--card2) !important;border:1.5px solid var(--cyan);display:grid;place-items:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:0.95rem;color:var(--cyan) !important;-webkit-text-fill-color:var(--cyan) !important;cursor:pointer;flex-shrink:0;transition:all 0.2s;box-shadow:0 0 10px rgba(0,232,200,0.25)}
 .nav-avatar:hover{box-shadow:0 0 18px rgba(0,232,200,0.5)}
-.discord-btn-sm{display:flex;align-items:center;gap:6px;background:rgba(88,101,242,0.12);border:1px solid rgba(88,101,242,0.3);color:#7289da;padding:5px 12px;border-radius:7px;font-size:0.8rem;font-weight:700;text-decoration:none;transition:all 0.2s;white-space:nowrap}
-.discord-btn-sm:hover{background:rgba(88,101,242,0.25);color:#fff}
 .nav-cta{background:var(--cyan);color:#000 !important;padding:9px 22px;border-radius:10px;font-weight:700 !important;font-size:0.86rem !important;transition:all 0.2s !important;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 0 24px rgba(0,232,200,0.2);white-space:nowrap}
 .nav-cta:hover{box-shadow:0 0 40px rgba(0,232,200,0.45) !important;transform:translateY(-1px)}
 .hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
@@ -484,10 +482,6 @@ footer p{font-size:0.8rem;color:var(--text3);font-weight:500}
     <a onclick="sec('features')">Features</a>
     <a onclick="sec('pricing')">Pricing</a>
     <a onclick="sec('faq')">FAQ</a>
-    <a href="https://discord.gg/PLACEHOLDER" target="_blank" class="discord-btn-sm">
-      <svg width="14" height="11" viewBox="0 0 71 55" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M60.105 4.898A58.55 58.55 0 0045.653.415a.22.22 0 00-.233.11 40.784 40.784 0 00-1.8 3.697c-5.456-.817-10.886-.817-16.23 0-.485-1.164-1.201-2.587-1.828-3.697a.228.228 0 00-.233-.11 58.386 58.386 0 00-14.451 4.483.207.207 0 00-.095.082C1.578 18.73-.944 32.144.293 45.39a.244.244 0 00.093.167c6.073 4.46 11.955 7.167 17.729 8.962a.23.23 0 00.249-.082 42.08 42.08 0 003.627-5.9.225.225 0 00-.123-.312 38.772 38.772 0 01-5.539-2.64.228.228 0 01-.022-.378c.372-.279.744-.569 1.1-.862a.22.22 0 01.23-.031c11.62 5.305 24.198 5.305 35.677 0a.219.219 0 01.233.028c.356.293.728.586 1.103.865a.228.228 0 01-.02.378 36.384 36.384 0 01-5.54 2.637.227.227 0 00-.121.315 47.249 47.249 0 003.624 5.897.225.225 0 00.249.084c5.801-1.795 11.684-4.502 17.757-8.961a.228.228 0 00.092-.164c1.48-15.315-2.48-28.618-10.497-40.412a.18.18 0 00-.093-.084zm-36.38 32.427c-3.497 0-6.38-3.211-6.38-7.156 0-3.944 2.827-7.156 6.38-7.156 3.583 0 6.437 3.24 6.38 7.156 0 3.945-2.827 7.156-6.38 7.156zm23.593 0c-3.498 0-6.38-3.211-6.38-7.156 0-3.944 2.826-7.156 6.38-7.156 3.582 0 6.437 3.24 6.38 7.156 0 3.945-2.826 7.156-6.38 7.156z"/></svg>
-      Discord
-    </a>
     <a onclick="go('dash')" id="nDashLink" style="display:none;color:var(--cyan);font-weight:700">Dashboard</a>
   </div>
   <div class="nav-right" id="navR">
@@ -499,7 +493,6 @@ footer p{font-size:0.8rem;color:var(--text3);font-weight:500}
   </div>
 </nav>
 <div class="mob-nav" id="mobN">
-  <a href="https://discord.gg/PLACEHOLDER" target="_blank" style="color:#7289da;font-weight:700">Join our Discord</a>
   <a onclick="sec('features');mobNav()">Features</a>
   <a onclick="sec('pricing');mobNav()">Pricing</a>
   <a onclick="sec('faq');mobNav()">FAQ</a>
@@ -520,7 +513,6 @@ footer p{font-size:0.8rem;color:var(--text3);font-weight:500}
     <p class="hero-p">Describe any feature in plain English — leaderboards, combat systems, shops, GUIs. BloxyAI writes production-ready Lua code in seconds. Zero coding required.</p>
     <div class="hero-btns">
       <button class="btn p" onclick="handleCTA()">Start Building Free →</button>
-      <button class="btn s" onclick="sec('how')">See How It Works</button>
     </div>
     <div class="stats">
       <div class="stat"><div class="stat-n">2,400+</div><div class="stat-l">Creators Building</div></div>
@@ -791,7 +783,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
     <div class="fi"><div class="fq" onclick="faqT(this)"><span>What counts as one generation?</span><span class="fico">+</span></div><div class="fa"><p>Each time you click Generate and receive a code output counts as one generation. Viewing saved scripts, copying old results, or browsing the dashboard does not count toward your credit limit.</p></div></div>
     <div class="fi"><div class="fq" onclick="faqT(this)"><span>Can I cancel my subscription anytime?</span><span class="fico">+</span></div><div class="fa"><p>Yes. Cancel anytime from Settings and you'll keep full access until the end of your billing period. No questions asked, no cancellation fees.</p></div></div>
     <div class="fi"><div class="fq" onclick="faqT(this)"><span>What types of scripts can BloxyAI generate?</span><span class="fico">+</span></div><div class="fa"><p>Combat systems, leaderboards, GUIs, monetization (gamepasses, developer products), admin commands, NPC behaviors, DataStore systems, game mechanics, and much more.</p></div></div>
-    <div class="fi"><div class="fq" onclick="faqT(this)"><span>Is there a free trial?</span><span class="fico">+</span></div><div class="fa"><p>Yes — every plan comes with a 7-day free trial. You enter your card upfront but are not charged until day 8. During the trial you get 10 credits to test the product. Cancel before day 8 and you pay nothing.</p></div></div>
+    <div class="fi"><div class="fq" onclick="faqT(this)"><span>Is there a free trial?</span><span class="fico">+</span></div><div class="fa"><p>Yes — every plan comes with a 7-day free trial. You enter your card upfront but are not charged until day 8. During the trial you get 3 credits to test the product. Cancel before day 8 and you pay nothing.</p></div></div>
   </div>
 </section>
 
@@ -851,7 +843,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
           <div class="thead2">
             <span class="tlbl">Credits</span>
             <div style="display:flex;align-items:center;gap:6px">
-              <span class="tnum" id="tokN">0/10</span>
+              <span class="tnum" id="tokN">0/3</span>
               <button onclick="openBuyCredits()" title="Buy more credits" style="width:18px;height:18px;background:var(--cyan);border:none;border-radius:4px;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:opacity 0.2s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </button>
@@ -1013,7 +1005,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
               <h3>Account Information</h3>
             </div>
             <div class="srow"><span class="sk">Email address</span><span class="sv" id="sEmail">—</span></div>
-            <div class="srow"><span class="sk">Current plan</span><span class="pchip" id="sPlan">Hobbyist</span></div>
+            <div class="srow"><span class="sk">Current plan</span><span class="pchip" id="sPlan">Trial</span></div>
             <div class="srow"><span class="sk">Credits used</span><span class="sv" id="sUsed">0 / 10</span></div>
             <div class="srow"><span class="sk">Member since</span><span class="sv" id="sJoined">—</span></div>
           </div>
@@ -1039,7 +1031,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
               <h3>Subscription & Billing</h3>
             </div>
-            <div class="srow"><div><div class="sk">Active plan</div><div class="sk-sub">Renews on the 1st of each month</div></div><span class="pchip" id="sPlan2">Hobbyist</span></div>
+            <div class="srow"><div><div class="sk">Active plan</div><div class="sk-sub">Renews on the 1st of each month</div></div><span class="pchip" id="sPlan2">Trial</span></div>
             <div class="srow"><div><div class="sk">Need more credits?</div><div class="sk-sub">Top up anytime — credits never expire</div></div><button class="sbtn cy" onclick="openBuyCredits()">Buy Credits</button></div>
             <div class="srow"><div><div class="sk">Cancel subscription</div><div class="sk-sub">Access continues until end of billing period</div></div><button class="sbtn gh" onclick="cancelSub()">Cancel Plan</button></div>
           </div>
@@ -1049,7 +1041,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
               <h3>Billing History</h3>
             </div>
-            <div class="brow"><div><div class="binfo">Hobbyist Plan</div><div class="bdate">Free — no charge</div></div><div style="display:flex;align-items:center;gap:0.75rem"><span class="bamt">$0.00</span><span class="bst free">Active</span></div></div>
+            <div class="brow"><div><div class="binfo">Trial Plan</div><div class="bdate">Free — 3 credits included</div></div><div style="display:flex;align-items:center;gap:0.75rem"><span class="bamt">$0.00</span><span class="bst free">Active</span></div></div>
             <div style="padding:1rem 1.5rem;color:var(--text3);font-size:0.8rem;font-weight:400">Paid invoices will appear here after your first billing cycle.</div>
           </div>
 
@@ -1082,7 +1074,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
         <div style="background:var(--cdim);border:1px solid rgba(0,232,200,0.2);border-radius:var(--r2);padding:1.25rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
           <div>
             <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:3px">Current Plan</div>
-            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;font-weight:800" id="upCurrentPlan">Hobbyist (Free)</div>
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;font-weight:800" id="upCurrentPlan">Trial</div>
           </div>
           <div style="text-align:right">
             <div style="font-size:0.78rem;color:var(--text2);margin-bottom:3px">Credits used this month</div>
@@ -1179,7 +1171,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
     <button class="mcl" onclick="closeM('signupOv')">✕</button>
     <div class="mlogo">BloxyAI</div>
     <h2>Create account</h2>
-    <p class="msub">Start with 10 free credits — no card needed</p>
+    <p class="msub">Start with 3 free credits — no card needed</p>
     <div class="merr" id="suErr"></div>
     <div class="fg"><label>Email</label><input type="email" id="suE" placeholder="you@example.com"></div>
     <div class="fg"><label>Password</label>
@@ -1230,7 +1222,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
     </div>
 
     <button class="mbtn" id="buyCreditsBtn" onclick="confirmBuyCredits()" style="opacity:0.4;pointer-events:none">Select a bundle above</button>
-    <p style="text-align:center;color:var(--text3);font-size:0.76rem;margin-top:1rem">Secure checkout powered by Stripe. Credits are added manually within 24 hours after payment.</p>
+    <p style="text-align:center;color:var(--text3);font-size:0.76rem;margin-top:1rem">Secure checkout powered by Stripe. Credits are added to your account automatically after payment.</p>
   </div>
 </div>
 
@@ -1247,7 +1239,7 @@ Players.<span class="fn">PlayerAdded</span>:<span class="fn">Connect</span>(<spa
 </div>
 
 <script>
-const APIKEY='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';
+const APIKEY='YOUR_API_KEY_HERE';
 let _SB=null;
 let CU=null;
 
@@ -1315,7 +1307,7 @@ function handleCTA(){
 
 const PLANS=[
   {name:'Starter',limit:50,price:'$9.99'},
-  {name:'Creator',limit:100,price:'$19.99'},
+  {name:'Creator',limit:30,price:'$19.99'},
   {name:'Studio',limit:300,price:'$49.99'}
 ];
 
@@ -1326,7 +1318,7 @@ function selectPlan(i){
   if(cur===plan.name){toast('You are already on the '+plan.name+' plan.');return;}
   showConfirm(
     'Switch to '+plan.name+'?',
-    'Upgrade to '+plan.name+' ('+plan.price+'/mo) — '+plan.limit+' credits/month. Stripe billing coming soon — your plan will be updated manually.',
+    'Upgrade to '+plan.name+' ('+plan.price+'/mo) — '+plan.limit+' credits/month. You will be redirected to Stripe to complete your upgrade.',
     'Confirm',false,
     ()=>{
       const users=getU();
@@ -1451,10 +1443,10 @@ async function doSignup(){
   const{data,error}=await _SB.auth.signUp({email,password:pass});
   if(error){setMbtnLoading(btn,false,'Create Free Account');showErr('suErr',error.message);return;}
   await _SB.from('profiles').insert({
-    id:data.user.id,email,plan:'Starter',credits_used:0,credits_limit:10,
+    id:data.user.id,email,plan:'Starter',credits_used:0,credits_limit:3,
     trial:true,trial_start:Date.now(),joined:new Date().toLocaleDateString()
   });
-  CU={id:data.user.id,email,plan:'Starter',credits_used:0,credits_limit:10,trial:true,trial_start:Date.now()};
+  CU={id:data.user.id,email,plan:'Starter',credits_used:0,credits_limit:3,trial:true,trial_start:Date.now()};
   fetch('https://app.loops.so/api/v1/contacts/create',{
     method:'POST',
     headers:{'Authorization':'Bearer a4ec136eeee2dcdd3887dad9dac459cc','Content-Type':'application/json'},
@@ -1462,7 +1454,7 @@ async function doSignup(){
   }).catch(()=>{});
   setMbtnLoading(btn,false,'Create Free Account');
   closeM('signupOv');syncNav();go('dash');
-  toast('Welcome to BloxyAI — your 7-day trial has started. You have 10 credits to try it out.');
+  toast('Welcome to BloxyAI — your 7-day trial has started. You have 3 credits to try it out.');
 }
 
 async function doLogin(){
@@ -1549,9 +1541,9 @@ async function doGen(){
   const btn=document.getElementById('gbtn');btn.classList.add('ld');btn.disabled=true;
   startLoading();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('https://bloxyai.bloxyyai.workers.dev',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01',},
       body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,
         system:'You are BloxyAI, a Roblox Lua code generator. Your ONLY output is raw Lua code — nothing else. NEVER use markdown, NEVER use backticks, NEVER write python, NEVER explain anything, NEVER include preamble or postamble. Output ONLY valid Luau code that works in Roblox Studio. Start your response with -- or local or game: — never with a word, sentence, or backtick. Use game:GetService() for all services. If the request is unclear, still output working Lua code for the closest matching Roblox feature.',
         messages:[{role:'user',content:prompt}]})
@@ -1827,7 +1819,7 @@ async function doIdea(){
   document.getElementById('ideaCard').style.display='none';document.getElementById('ideaCard').classList.remove('on');
   document.getElementById('ideaBar').style.width='60%';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,system:IDEA_SYSTEM,messages:[{role:'user',content:prompt}]})});
+    const res=await fetch('https://bloxyai.bloxyyai.workers.dev',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01',},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,system:IDEA_SYSTEM,messages:[{role:'user',content:prompt}]})});
     const data=await res.json();
     if(data.error)throw new Error(data.error.message);
     const idea=(data.content&&data.content[0]&&data.content[0].text)||'No idea generated.';
@@ -1853,7 +1845,7 @@ async function doDebug(){
   document.getElementById('debugCard').style.display='none';document.getElementById('debugCard').classList.remove('on');
   document.getElementById('debugBar').style.width='60%';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,system:'You are a Roblox Lua debugger. Find all bugs and return ONLY the fixed working Lua code with brief inline comments marking what you fixed. No explanations outside the code, no markdown, no backticks.',messages:[{role:'user',content:'Debug and fix this Roblox Lua code:\n\n'+code}]})});
+    const res=await fetch('https://bloxyai.bloxyyai.workers.dev',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01',},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,system:'You are a Roblox Lua debugger. Find all bugs and return ONLY the fixed working Lua code with brief inline comments marking what you fixed. No explanations outside the code, no markdown, no backticks.',messages:[{role:'user',content:'Debug and fix this Roblox Lua code:\n\n'+code}]})});
     const data=await res.json();
     if(data.error)throw new Error(data.error.message);
     const fixed=(data.content&&data.content[0]&&data.content[0].text)||'-- Could not debug this script.';
