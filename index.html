@@ -1447,11 +1447,7 @@ async function doSignup(){
     trial:true,trial_start:Date.now(),joined:new Date().toLocaleDateString()
   });
   CU={id:data.user.id,email,plan:'Starter',credits_used:0,credits_limit:3,trial:true,trial_start:Date.now()};
-  fetch('https://app.loops.so/api/v1/contacts/create',{
-    method:'POST',
-    headers:{'Authorization':'Bearer f37e4727f4077b65b21ae9433c6b2af3','Content-Type':'application/json'},
-    body:JSON.stringify({email,firstName:'',userGroup:'trial',source:'bloxyai'})
-  }).catch(()=>{});
+
   setMbtnLoading(btn,false,'Create Free Account');
   closeM('signupOv');syncNav();go('dash');
   toast('Welcome to BloxyAI — your 7-day trial has started. You have 3 credits to try it out.');
