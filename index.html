@@ -1579,8 +1579,16 @@ async function rdash(){
 async function doGen(){
   if(!_SB){toast('Connection error. Please refresh the page.');return;}
   if(!CU){openM('login');return;}
-  const{data:profile}=await _SB.from('profiles').select('*').eq('id',CU.id).single();
-  if(!profile){toast('Session error — please log in again.');return;}
+  // Ensure session is valid before reading profile
+  const{data:{session}}=await _SB.auth.getSession();
+  if(!session){CU=null;syncNav();openM('login');return;}
+  let{data:profile}=await _SB.from('profiles').select('*').eq('id',CU.id).single();
+  if(!profile){
+    await _SB.auth.refreshSession();
+    const res=await _SB.from('profiles').select('*').eq('id',CU.id).single();
+    profile=res.data;
+    if(!profile){toast('Session error — please log out and log back in.');return;}
+  }
   if((profile.credits_limit===0&&!profile.trial)||profile.credits_used>=profile.credits_limit){
     if(profile.trial){
       toast('Your trial has ended. Choose a plan to keep building.');
@@ -2284,13 +2292,30 @@ function initSupabase(){
       _SB=window.supabase.createClient(
         'https://kjbtfpqtqlmoeqivntmi.supabase.co',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqYnRmcHF0cWxtb2VxaXZudG1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxOTg1MzAsImV4cCI6MjA5Mzc3NDUzMH0.36NWUvGx0YgYGmR7-_4UTCJJRvqGZefyE3hrmMVA3TQ',
-        {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}
+        {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storage:window.localStorage}}
       );
+      // Listen for auth changes so session never gets lost
+      _SB.auth.onAuthStateChange(function(event, session){
+        if(event==='SIGNED_IN'&&session){
+          _SB.from('profiles').select('*').eq('id',session.user.id).single().then(function(res){
+            if(res.data){
+              CU={id:session.user.id,email:session.user.email,...res.data};
+              syncNav();
+            }
+          });
+        }else if(event==='SIGNED_OUT'){
+          CU=null;syncNav();
+        }else if(event==='TOKEN_REFRESHED'&&session){
+          // Keep CU in sync after token refresh
+          if(CU)CU.id=session.user.id;
+        }
+      });
     }
   }catch(e){console.warn('Supabase unavailable:',e);}
 }
 initSupabase();
-restoreSess().then(()=>syncNav());buildCarousel();
+restoreSess().then(function(){syncNav();});
+buildCarousel();
 </script>
 </body>
 </html>
