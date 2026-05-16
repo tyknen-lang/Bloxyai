@@ -2283,7 +2283,8 @@ function initSupabase(){
     if(window.supabase){
       _SB=window.supabase.createClient(
         'https://kjbtfpqtqlmoeqivntmi.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqYnRmcHF0cWxtb2VxaXZudG1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxOTg1MzAsImV4cCI6MjA5Mzc3NDUzMH0.36NWUvGx0YgYGmR7-_4UTCJJRvqGZefyE3hrmMVA3TQ'
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqYnRmcHF0cWxtb2VxaXZudG1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxOTg1MzAsImV4cCI6MjA5Mzc3NDUzMH0.36NWUvGx0YgYGmR7-_4UTCJJRvqGZefyE3hrmMVA3TQ',
+        {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}
       );
     }
   }catch(e){console.warn('Supabase unavailable:',e);}
